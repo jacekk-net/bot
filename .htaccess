@@ -1,0 +1,40 @@
+AddDefaultCharset utf-8
+
+Order deny,allow
+Deny from all
+
+<Files "">
+	Allow from all
+</Files>
+
+<Files jacekk.jpg>
+	Allow from all
+</Files>
+
+<FilesMatch "\.png$">
+	Allow from all
+</FilesMatch>
+<FilesMatch "\.gif$">
+	Allow from all
+</FilesMatch>
+
+<Files BotGG.php>
+	Allow from all
+</Files>
+<Files BotIMI.php>
+	Allow from all
+</Files>
+<Files BotHTTP.php>
+	Allow from all
+</Files>
+
+<Files test.php>
+	Allow from all
+</Files>
+
+<Files index.html>
+	Allow from all
+</Files>
+<Files MODULES.html>
+	Allow from all
+</Files>

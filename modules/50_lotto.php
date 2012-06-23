@@ -1,0 +1,123 @@
+<?php
+class lotto implements module {
+	static function register_cmd() {
+		return array(
+			'lotto' => 'cmd_lotto',
+			'lootto' => 'cmd_lotto',
+			'lotek' => 'cmd_lotto',
+			'wyniki' => 'cmd_lotto',
+			'l' => 'cmd_lotto',
+			'duzy' => 'cmd_lotto',
+			'express' => 'cmd_lotto',
+			'expres' => 'cmd_lotto',
+			'ekspress' => 'cmd_lotto',
+			'ekspress' => 'cmd_lotto',
+			'exp' => 'cmd_lotto',
+			'multi' => 'cmd_lotto',
+			'multimulti' => 'cmd_lotto',
+			'multilotek' => 'cmd_lotto',
+			'twoj' => 'cmd_lotto',
+			'tsn' => 'cmd_lotto',
+			'jk' => 'cmd_lotto',
+			'joker' => 'cmd_lotto',
+			'el' => 'cmd_lotto',
+			'ex' => 'cmd_lotto',
+			'mm' => 'cmd_lotto',
+			'ml' => 'cmd_lotto',
+			'dl' => 'cmd_lotto'
+		);
+	}
+	
+	static function help($cmd=NULL) {
+		if($cmd === NULL) {
+			GGapi::putRichText('lotto ', TRUE);
+			GGapi::putRichText('[gra]', FALSE, TRUE);
+			GGapi::putRichText("\n".'   Wyniki gry liczbowej TS'."\n");
+		}
+		else
+		{
+			GGapi::putRichText('lotto ', TRUE);
+			GGapi::putRichText('[gra]', FALSE, TRUE);
+			GGapi::putRichText(' (alias: ');
+			GGapi::putRichText('lotek, wyniki, l', TRUE);
+			GGapi::putRichText(')'."\n".'   Podaje wyniki ostatniego losowania gry Totalizatora Sportowego ');
+			GGapi::putRichText('[gra]', FALSE, TRUE);
+			GGapi::putRichText(', gdzie gra to: dl, el, mm lub jk.');
+		}
+	}
+	
+	static function cmd_lotto($name, $arg) {
+		$skrot_nazwa = array(
+			'dl' => 'Lotto',
+			'dl2' => 'Lotto',
+			'el' => 'Mini Lotto',
+			'el2' => 'Mini Lotto',
+			'mm' => 'Multi Multi',
+			'mm2' => 'Multi Multi',
+			'mm14' => 'Multi Multi (14:00)',
+			'mm142' => 'Multi Multi (14:00)',
+			'mm22' => 'Multi Multi (22:00)',
+			'mm222' => 'Multi Multi (22:00)',
+			'jk' => 'Joker',
+			'jk2' => 'Jokera',
+		);
+		$arg_start = array(
+			'dl' => 'dl', 'duzego' => 'dl', 'duzy' => 'dl', 'duzylotek' => 'dl',
+			'el' => 'el', 'express' => 'el', 'ekspress' => 'el', 'expres' => 'el', 'ekspres' => 'el', 'ex' => 'el', 'mini' => 'el', 'm' => 'el', 'mlotto' => 'el', 'mini' => 'el',
+			'ml' => 'ml', 'multilotka' => 'ml',
+			'mm' => 'mm', 'multi' => 'mm', 'multimulti' => 'mm',
+			'jk' => 'jk', 'joker' => 'jk', 'tsn' => 'jk', 'numerek' => 'jk', 'numerka' => 'jk', 'twojego' => 'jk', 'twoj' => 'jk', 'szczesliwego' => 'jk', 'szczesliwy' => 'jk',
+		);
+		$arg = explode(' ', funcs::utfToAscii($arg));
+		array_unshift($arg, $name);
+		
+		foreach($arg as $value) {
+			if(empty($value))
+				continue;
+			$value = trim($value, "\t\n\r .,:;'\"");
+			if(isset($arg_start[$value])) {
+				$gra = $arg_start[$value];
+				break;
+			}
+		}
+		
+		if(!$gra) {
+			$gra = 'dl';
+		}
+		
+		if($gra == 'mm') {
+			$typy = array('14', '22');
+		}
+		else {
+			$typy = array('');
+		}
+		
+		$txt = '';
+		foreach($typy as $addon) {
+			$dane = unserialize(file_get_contents('./data/lotto/'.$gra.$addon.'.txt'));
+			$txt .= 'Losowanie '.$skrot_nazwa[$gra.'2'].''.($addon ? ' '.$addon.':00' : '').' z dnia '.$dane['data']."\n";
+			$gt = 1;
+			if($gra == 'jk') {
+				$txt .= $skrot_nazwa['jk'].': '.$dane[1]."\n".'Cztery liczby: '.$dane[2];
+				$gt = 2;
+			}
+			else
+			{
+				$txt .= 'Liczby: '.$dane[1];
+			}
+			
+			foreach($dane as $i => $l) {
+				if(is_numeric($i) && $i>$gt) {
+					$txt .= ', '.$l;
+				}
+			}
+			
+			if($gra == 'ml' || $gra == 'mm') {
+				$txt .= "\n".'Plus: '.$dane['plus']."\n\n";
+			}
+		}
+		
+		GGapi::putText(trim($txt));
+	}
+}
+?>

@@ -1,0 +1,544 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+<title>Tworzenie modułów - Bot Gadu-Gadu - dev.Jacekk.info</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+<style type="text/css">
+body {font-family: sans-serif;}
+h3 {	padding: 5px 20px;
+	border-top: 2px solid black;
+	border-bottom: 2px solid black;
+	text-transform: uppercase;}
+h3:before {
+	counter-increment: header-h3;
+	content: counter(header-h3) ". ";
+	counter-reset: header-h4;}
+h4 {	padding: 5px 10px;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;}
+h4:before {
+	counter-increment: header-h4;
+	content: counter(header-h4, lower-latin) ") ";}
+ol#menu ol {list-style-type: lower-latin;}
+pre {	margin-left: 20px;
+	border-left: 3px solid #666;
+	padding-left: 12px;}
+pre.plain{border:none;}
+pre > span:first-child {
+	display: block;
+	background: #666;
+	color: #fff;
+	padding: 5px 10px;
+	margin-left: -12px;
+	margin-bottom: 8px;}
+code * {font-style: normal;
+	font-weight: normal;}
+code var {color: #0000BB;}
+code b {color: #007700;}
+code cite {color: #DD0000;}
+code i {color: #FF9900;}
+.info, .warning, .example {
+	padding-left: 40px;
+	padding-top: 7px;
+	min-height: 26px;
+	background-repeat: no-repeat;}
+.info {	background-image: url(img/info.png);}
+.warning {background-image: url(img/warning.png);}
+code, pre {
+	margin-top:0px;
+	padding-top:0;}
+.example {
+	background-image: url(img/example.png);
+	margin-bottom: 0px;}
+</style>
+</head>
+<body>
+<pre class="plain">
+ ___  ___    ______    _______    __    __   __    ___    ___
+|   \/   |  /  __  \  |   __  \  |  |  |  | |  |__ \  \  /  /
+|  \  /  | |  |  |  | |  |  \  | |  |  |  | |  ' /  \  \/  /
+|  |\/|  | |  |  |  | |  |   | | |  |  |  | |   /    \    /
+|  |  |  | |  |__|  | |  |__/  | |  |__|  | |  |____  |  |
+|__|  |__|  \______/  |_______/   \______/  |_______| |__|
+Poradnik v2.0                           Tworzenie i edycja
+</pre>
+
+<h3 id="tableOfContent">Spis treści</h3>
+
+<div id="menu">
+</div>
+
+<h3 id="interfaceBotModuleInit">Rejestracja modułu - interfejs BotModuleInit</h3>
+
+<p>Należy w katalogu ./modules/ utworzyć folder o dowolnej nazwie, na przykład:</p>
+<pre>99_NAZWAMODULU</pre>
+
+<p class="info">Zaleca się, by nazwa folderu była postaci 00_NAZWAMODULU, gdzie 00 to cyfry umożliwiające ustawienie kolejności modułów. Jest to przydatne przy wyświetlaniu pomocy lub listy funkcji.</p>
+
+<p>Folder ten powinien zawierać plik o nazwie init.php, zawierający klasę o dowolnej nazwie, implementującą BotModuleInit, oraz co najmniej dwie metody - register i help. Na końcu pliku powinna znajdować się konstrukcja return, zwracająca nazwę klasy:</p>
+
+<pre>
+<span>./modules/99_NAZWAMODULU/init.php</span><code><b>&lt;?php
+class <var>bot_NAZWAMODULU_init</var> implements <a href="#interfaceBotModuleInit"><var>BotModuleInit</var></a>
+{
+   function <var>register</var>() {
+   }
+
+   function <var>help</var>(<var>$params</var> = NULL) {
+   }
+}
+
+return <cite>'bot_NAZWAMODULU_init'</cite>;
+?&gt;</b></code>
+</pre>
+
+<p class="info">By nie powodować konfliktów nazw, zaleca się, by nazwa klasy była formatu bot_NAZWAMODULU_init, jednak nie jest to wymagane.</p>
+<p class="warning">Błąd składniowy w pliku init.php może powodować błędy w działaniu całego bota!</p>
+<p class="warning">Informacje zwracane przez plik inicjujący są cache'owane. Po każdej zmianie pliku init.php należy koniecznie usunąć zawartość folderu cache!</p>
+
+<h4 id="interfaceBotModuleInit_methodRegister">Metoda register()</h4>
+
+<p>Metoda <code><var>register</var><b>()</b></code> ma zwracać tablicę następującej postaci:</p>
+<pre>
+<code><b>array(</b>
+   <cite>'komenda' <b>=&gt; array(
+      array(</b>
+         'file' <b>=&gt;</b> 'komenda.php'<b>,</b>
+         'class' <b>=&gt;</b> 'bot_NAZWAMODULU_module'<b>,</b>
+         'method' <b>=&gt;</b> 'komenda1'<b>,</b>
+         'params' <b>=&gt;</b> 'parametr_do_funkcji'<b>,
+      ),
+      array(</b>
+         'file' <b>=&gt;</b> 'komenda.php'<b>,</b>
+         'class' <b>=&gt;</b> 'bot_NAZWAMODULU_module'<b>,</b>
+         'method' <b>=&gt;</b> 'komenda2'<b>,
+      ),
+   ),</b>
+   '*'<b> =&gt; array(
+      array(</b>
+         'file' <b>=&gt;</b> 'test.php'<b>,</b>
+         'class' <b>=&gt;</b> 'NAZWAMODULU_test'<b>,</b>
+         'method' <b>=&gt;</b> 'komenda_test'</cite><b>,
+      ),
+   ),
+)</b></code>
+</pre>
+
+<p><code><cite>'komenda'</cite></code> to nazwa obsługiwanej przez moduł komendy. <code><cite>'*'</cite></code> oznacza, że obsługiwana może być każda wiadomość od użytkownika. <code><cite>'file'</cite></code> zawiera nazwę pliku, w którym znajduje się klasa z parametru <code><cite>'class'</cite></code>. <code><cite>'method'</cite></code> to metoda klasy, która przetwarza daną komendę. Opcjonalny parametr <code><cite>'params'</cite></code> zawiera dowolny obiekt (np. string, array), na którym można wykonać funkcję <code><a href="http://php.net/serialize"><var>serialize</var></a><b>()</b></code>, a który zostanie przekazany do wywoływanej metody. Więcej informacji o sposobie przetwarzania wiadomości od użytkownika znajduje się w kolejnym dziale: <a href="#interfaceBotModule">Komunikacja z użytkownikiem - interfejs BotModule</a></p>
+
+<p class="info"><code><cite>'komenda'</cite></code> powinna zawierać jedynie małe litery alfabetu angielskiego. Jeżeli zawiera polskie ogonki lub wielkie litery, zostaną one automatycznie zastąpione odpowiednikami. Jeśli równocześnie istnieją indeksy zawierające np. <code><cite>'ą'</cite></code> oraz <code><cite>'a'</cite></code>, mogą one zostać połączone w dowolnej kolejności.</p>
+
+<p class="example">Przykład - rejestrowanie komendy przyklad:</p>
+<pre>
+<span>./modules/99_przyklad/init.php</span><code><b>&lt;?php
+class <var>bot_przyklad_init</var> implements <a href="#interfaceBotModuleInit"><var>BotModuleInit</var></a>
+{
+   function <var>register</var>() {
+      return array(</b>
+         <cite>'przyklad' <b>=&gt; array(
+            array(</b>
+               'file' <b>=&gt;</b> 'przyklad.php'<b>,</b>
+               'class' <b>=&gt;</b> 'bot_przyklad_module'<b>,</b>
+               'method' <b>=&gt;</b> 'komenda_przyklad'<b>,</b>
+               'params' <b>=&gt;</b> 'parametr_do_funkcji'</cite><b>,
+            )
+         )
+      );
+   }
+
+   <i>/* Pominięto tu wymaganą metodę help().
+      Jej implementację można znaleźć poniżej. */</i>
+}
+
+return <cite>'bot_przyklad_init'</cite>;
+?&gt;</b></code>
+</pre>
+
+<p class="info">W dalszej części zakładamy, że tworzymy moduł obsługujący komendę przyklad.</p>
+
+<h4 id="interfaceBotModuleInit_methodHelp">Metoda help()</h4>
+
+<p>Metoda <code><var>help</var><b>()</b></code> przyjmuje argument <code><var>$params</var></code> - nazwę komendy, dla której ma zwrócić, za pośrednictwem <a href="classBotMsg">klasy BotMsg</a>, pomoc. Jeśli argument ten jest identyczny z <code><b>NULL</b></code>, należy zwrócić skróconą listę poleceń z krótkim wyjaśnieniem, zakończoną dwoma znakami nowej linii.</p>
+
+<p>Jeżeli moduł nie ma pomocy lub nie obsługuje danej komendy (szczególnie dla pseudokomendy <code><cite>'*'</cite></code>), powinna zostać zwrócona wartość <code><b>FALSE</b></code></p>
+
+<p>Jeżeli żaden moduł nie zwrócił wiadomości z pomocą, użytkownik jest informowany o braku pomocy dla danej komendy.</p>
+
+<p class="info">Skrócona lista poleceń jest generowana tylko z tych plików init.php, które rejestrują przynajmniej jedną komendę.</p>
+
+<p class="example">Przykład - funkcja <code><var>help</var><b>()</b></code>:</p>
+<pre>
+<code><b>  function <var>help</var>(<var>$params</var> = NULL) {
+      if(<var>$params</var> === NULL) {
+         return new <a href="#classBotMsg"><var>BotMsg</var></a>(<cite>'&lt;b&gt;przyklad&lt;/b&gt; &lt;i&gt;[argument]&lt;/i&gt;&lt;br /&gt;'<b>.</b>"\n"<b>.</b>
+            '   Zwraca przykładowy tekst oraz treść argumentu&lt;br /&gt;&lt;br /&gt;'</cite>);
+      }
+      else
+      {
+         return new <a href="#classBotMsg"><var>BotMsg</var></a>(<cite>'&lt;b&gt;przyklad&lt;/b&gt; &lt;i&gt;[argument]&lt;/i&gt;&lt;br /&gt;'<b>.</b>"\n"<b>.</b>
+            '   Komenda zwraca przykładowy tekst oraz treść argumentu &lt;i&gt;[argument]&lt;/i&gt; (jeśli istnieje)'</cite>);
+      }
+   }</b></code>
+</pre>
+
+<h4 id="interfaceBotModuleInit_example">Przykład</h4>
+<pre>
+<span>./modules/99_przyklad/init.php</span><code><b>&lt;?php
+class <var>bot_przyklad_init</var> implements <var>BotModuleInit</var>
+{
+   function <var>register</var>() {
+      return array(</b>
+         <cite>'przyklad' <b>=&gt; array(
+            array(</b>
+               'file' <b>=&gt;</b> 'przyklad.php'<b>,</b>
+               'class' <b>=&gt;</b> 'bot_przyklad_module'<b>,</b>
+               'method' <b>=&gt;</b> 'komenda_przyklad'<b>,</b>
+               'params' <b>=&gt;</b> 'parametr_do_funkcji'</cite><b>,
+            )
+         )
+      );
+   }
+   
+   function <var>help</var>(<var>$params</var> = NULL) {
+      if(<var>$params</var> === NULL) {
+         return new <a href="#classBotMsg"><var>BotMsg</var></a>(<cite>'przyklad &lt;i&gt;[argument]&lt;/i&gt;&lt;br /&gt;'<b>.</b>"\n"<b>.</b>
+            '   Zwraca przykładowy test oraz treść argumentu&lt;br /&gt;&lt;br /&gt;'</cite>);
+      }
+      else
+      {
+         return new <a href="#classBotMsg"><var>BotMsg</var></a>(<cite>'przyklad &lt;i&gt;[argument]&lt;/i&gt;&lt;br /&gt;'<b>.</b>"\n"<b>.</b>
+            '   Komenda zwraca przykładowy test oraz treść argumentu &lt;i&gt;[argument]&lt;/i&gt; (jeśli istnieje)'</cite>);
+      }
+   }
+}
+
+return <cite>'bot_przyklad_init'</cite>;
+?&gt;</b></code>
+</pre>
+
+<h4 id="interfaceBotModuleInit_more">Dalsze informacje</h4>
+
+<p>Następne sekcje zawierają informacje dotyczące klas i metod, które umożliwiają przetwarzanie wiadomości od użytkownika i wysyłanie komunikatu zwrotnego.</p>
+
+<p class="info">Jeśli moduł posiada dane, które musi przechowywać (np. słownik, tabelę kursów itp.), należy zapoznać się z sekcją <a href="#appendixDataStorage">Przechowywanie danych i ich aktualizacja</a></p>
+
+<h3 id="classBotMessage">Informacje o użytkowniku i treść wiadomości - klasa BotMessage</h3>
+
+<p>Wszystkie informacje związane z użytkownikiem są przekazywane jako pierwszy parametr do metody zarejestrowanej komendy pod postacią klasy potomnej BotMessage. Zawiera ona nastepujące pola:</p>
+
+<h4 id="classBotMessage_propertyUser">Pole $user</h4>
+
+<p>Zawiera wszystkie informacje o źródle i celu wiadomości - w postaci klasy BotUser. Zakładając, że <code><var>$msg</var></code> to nazwa zmiennej zawierającej klasę BotMessage, można uzyskać następujące informacje:</p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>user<b>-&gt;</b>interface</var></code>
+</pre>
+
+<p>Zawiera tekst: <code><cite>'Gadu-Gadu'</cite></code>, <code><cite>'IMified'</cite></code>, <code><cite>'HTTP'</cite></code> lub inny, który określa źródło wiadomości</p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>user<b>-&gt;</b>uid</var></code>
+</pre>
+
+<p>Zawiera numer użytkownika lub jego identyfikator (screen name).</p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>user<b>-&gt;</b>network</var></code>
+</pre>
+
+<p>Jeden z ciągów: <code><cite>'gadu-gadu.pl'</cite></code>, <code><cite>'jabber.imified.com'</cite></code>, <code><cite>'aim.imified.com'</cite></code>, <code><cite>'msn.imified.com'</cite></code>, <code><cite>'yahoo.imified.com'</cite></code>, <code><cite>'gtalk.imified.com'</cite></code>, <code><cite>'sms.imified.com'</cite></code> lub inny, identyfikujący sieć użytkownika.</p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>user<b>-&gt;</b>bot</var></code>
+</pre>
+
+<p>Informacja o bocie, do którego została wysłana wiadomość. Numer w przypadku Gadu-Gadu lub botkey w przypadku IMified.</p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>user<b>-&gt;</b>params</var></code>
+</pre>
+
+<p>Inne parametry. W przypadku IMified zawiera ciąg <code><cite>'public'</cite></code> lub <code><cite>'private'</cite></code>, pozwalający odróżnić źródło wiadomości na twitterze.</p>
+
+<h4 id="classBotMessage_propertySession">Pole $session</h4>
+
+<p>Odpowiednik klasy database z poprzedniej wersji bota. Aktualnie instancja klasy BotSession, umożliająca przechowywanie danych przypisanych do użytkownika, m.in. miasta, nazwy kina i tym podobnych.</p>
+
+<p>Przykład użycia:</p>
+
+<pre>
+<code><i>// Ustawienie pojedynczej wartości</i>
+<var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var> <b>= <cite>'To jest test'</cite>;</b>
+<a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var> <b>=== <cite>'To jest test'</cite>);</b>
+
+<i>// Usunięcie pojedynczej wartości</i>
+<a href="http://php.net/unset"><b>unset</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var><b>);</b>
+<a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var> <b>=== NULL);</b>
+
+<i>// Usunięcie wszystkich danych</i>
+<var>$msg<b>-&gt;</b>session<b>-&gt;</b>truncate</var><b>();</b>
+<a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var> <b>=== NULL);</b>
+
+<i>// Dopisanie (nadpisanie) danych</i>
+<var>$tablica</var> <b>= array(</b>
+   <cite>'zmienna' <b>=&gt;</b> 'To jest test'<b>,</b>
+   'zmienna2'</cite> <b>=&gt; new DateTime()
+);</b>
+<var>$msg<b>-&gt;</b>session<b>-&gt;</b>push<b>(</b>$tablica</var><b>);</b>
+
+<a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var> <b>=== <cite>'To jest test'</cite>);</b>
+<a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>pull<b>() ===</b> $tablica</var><b>);</b>
+
+<i>// push() nie usuwa istniejących danych</i>
+<var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna3</var> <b>= <cite>'To jest test'</cite>;</b>
+<var>$msg<b>-&gt;</b>session<b>-&gt;</b>push<b>(</b>$tablica</var><b>);</b>
+<a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>pull<b>() !==</b> $tablica</var><b>);</b>
+
+<i>// Usunięcie wszystkich danych</i>
+<var>$msg<b>-&gt;</b>session</var><b>-&gt;truncate();</b>
+<a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var> <b>=== NULL);</b></code>
+</pre>
+
+<h4 id="classBotMessage_propertyRawText">Pole $rawText</h4>
+
+<p>Zawiera dane, które zostały otrzymane od API, bez żadnych zmian, z zachowanym oryginalnym formatowaniem.</p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>rawText</var></code>
+</pre>
+
+<h4 id="classBotMessage_propertyText">Pole $text</h4>
+
+<p>Zawiera dane, które zostały otrzymane od API, wielkie litery zamienione na małe, wszystkie znaki alfabetu innego niż angielski transliterowane. Zobacz: <code><var>funcs</var><b>::</b><a href="#appendixHelpers_classFuncs_methodUtfToAscii"><var>utfToAscii</var></a><b>()</b></code></p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>text</var></code>
+</pre>
+
+<h4 id="classBotMessage_propertyCommand">Pole $command</h4>
+
+<p>Nazwa komendy (pierwszy wyraz z <a href="#classBotMessage_propertyText">pola $text</a>).</p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>command</var></code>
+</pre>
+
+<h4 id="classBotMessage_propertyArgs">Pole $args</h4>
+
+<p>Parametry przekazane do komendy (pozostałe wyrazy z <a href="#classBotMessage_propertyRawText">pola $rawText</a>).</p>
+
+<pre>
+<code><var>$msg<b>-&gt;</b>args</var></code>
+</pre>
+
+<h3 id="interfaceBotModule">Komunikacja z użytkownikiem - interfejs BotModule</h3>
+
+<p>Zgodnie z danymi zwracanymi przez <a href="#interfaceBotModuleInit_methodRegister">metodę register</a>, należy utworzyć plik zawierający klasę o podanej nazwie, implementującą BotModule, oraz odpowiednią metodę, przyjmującą dwa parametry:</p>
+
+<pre>
+<code><b>&lt;?php
+class <var>bot_przyklad_module</var> implements <a href="#interfaceBotModule"><var>BotModule</var></a>
+{
+   function <var>komenda_przyklad</var>(<var>$msg</var>, <var>$param</var> = NULL) {
+   }
+}</b></code>
+</pre>
+
+<p>Po wysłaniu przez użytkownika do bota polecenia, system wywoła w kolejności moduły, które zarejestrowały otrzymaną komendę (pierwszy wyraz w wiadomości), a następnie spróbuje wykonać moduły, które zarejestrowały się jako właściwe dla wszytkich komend (indeksem tablicy zwróconej w metodzie register była <code><cite>'*'</cite></code>). Do metod zostaną przekazane dwa parametry, opisane w powyższym przykładzie jako <code><var>$msg</var></code> i <code><var>$param</var></code>. Pierwszy z nich to instancja klasa <a href="#classBotMessage">BotMessage</a>, a drugi - wartość z indeksu <code><cite>'params'</cite></code> podawanego podczas rejestracji komendy.</p>
+
+<p>Wywołana metoda powinna zwrócić instancję <a href="#classBotMsg">klasy BotMsg</a> lub <code><b>FALSE</b></code>, jeżeli nie chce obsłużyć otrzymanej wiadomości. W drugim przypadku obsługa zostanie przekazana kolejnej metodzie/modułowi, który zarejestrował daną komendę, następnie do plików obsługujących komendę "*", a na końcu użytkownikowi zostanie wysłana informacja o nieobsługiwanym poleceniu.</p>
+
+<p class="info">Jeśli moduł ma przechowywać dane dotyczące użytkownika, należy zapoznać się z sekcją <a href="#classBotMessage_propertySession">Klasa BotMessage - pole $session</a></p>
+
+<pre>
+<span>./modules/99_przyklad/przyklad.php</span><code><b>&lt;?php
+class <var>bot_przyklad_module</var> implements <a href="#interfaceBotModule"><var>BotModule</var></a>
+{
+   function <var>komenda_przyklad</var>(<var>$msg</var>, <var>$param</var> = NULL) {</b>
+      <var>$reply</var> <b>= new</b> <a href="#classBotMsg"><var>BotMsg</var></a><b>(<cite>'&lt;p&gt;Przykładowy moduł&lt;/p&gt;'</cite>);</b>
+      <var>$reply</var><b>-&gt;</b><a href="#classBotMsg_methodAppend"><var>append</var></a><b>(<cite>'&lt;p&gt;Twój numer/identyfikator: '</cite> .</b> <var>$msg</var><b>-&gt;</b><a href="#classBotMessage_propertyUser"><var>user</var></a><b>-&gt;</b><var>uid</var>  <b>. <cite>'&lt;br /&gt;'</cite>
+         . <cite>'Otrzymane parametry: '</cite> .</b> <var>$msg</var><b>-&gt;</b><a href="#classBotMessage_propertyArgs"><var>args</var></a>  <b>. <cite>'&lt;/p&gt;'</cite>);
+      return <var>$reply</var>;
+   }
+}
+?&gt;</b></code>
+</pre>
+
+<h3 id="classBotMsg">Tworzenie wiadomości zwrotnej - klasa BotMsg</h3>
+
+<p>Aby utworzyć wiadomość dla użytkownika, należy stworzyć instację klasy BotMsg, która jako opcjonalny parametr przyjmuje kod HTML, który ma zostać wysłany użytkownikowi:</p>
+
+<pre>
+<code><var>$reply</var> <b>= new</b> <a href="#classBotMsg"><var>BotMsg</var></a><b>();</b>
+<i>// lub</i>
+<var>$reply</var> <b>= new</b> <a href="#classBotMsg"><var>BotMsg</var></a><b>(<cite>'&lt;p&gt;Akapit z tekstem &lt;b&gt;pogrubionym&lt;/b&gt; i &lt;i&gt;pochylonym&lt;/i&gt;&lt;/p&gt;'</cite>);</b></code>
+</pre>
+
+<p class="info">W wiadomości przekonwertowanej na tekst <b>zachowywane są białe znaki</b>, za wyjątkiem znaków nowej linii!</p>
+
+<h4 id="classBotMsg_methodAppend">Metoda append()</h4>
+
+<p>W razie konieczności dodania większej ilości treści, należy wywołać metodę <code><var>append</var><b>()</b></code> lub <code><var>a</var><b>()</b></code> z parametrem będącym kodem HTML:</p>
+
+<pre>
+<code><var>$reply</var> <b>= new</b> <a href="#classBotMsg"><var>BotMsg</var></a><b>();</b>
+
+<var>$reply</var><b>-&gt;</b><a href="#classBotMsg_methodAppend"><var>a</var></a><b>(<cite>'&lt;ol&gt;
+&lt;li&gt;pierwszy element listy&lt;/li&gt;
+&lt;li&gt;drugi element listy&lt;/li&gt;
+&lt;/ol&gt;'</cite>);</b>
+
+<var>$reply</var><b>-&gt;</b><a href="#classBotMsg_methodAppend"><var>append</var></a><b>(<cite>'&lt;p&gt;Kolejny akapit&lt;/p&gt;'</cite>);</b></code>
+</pre>
+
+<p class="warning">Zaleca się, by dodawany kod nie był "urwany", tzn. wszystkie tagi winny być poprawnie otwarte i zamknięte we wstawianym HTML-u. W przyszłości takie błędy mogą powodować odrzucenie dodawanej treści.</p>
+
+<h4 id="classBotMsg_appendixImage">Dodawanie obrazków</h4>
+
+<p>Aby dodać obrazek należy do kodu HTML dodać tag img, z atrybutem src zawierającym ścieżkę do obrazka względem głównego katalogu bota lub bezwzględną ścieżkę dostępu do niego:</p>
+
+<pre>
+<code><var>$reply</var><b>-&gt;</b><a href="#classBotMsg_methodAppend"><var>a</var></a><b>(<cite>'&lt;p&gt;Tu będzie obrazek: &lt;img src="data/przyklad/obrazek.png" /&gt;&lt;/p&gt;'</cite>);</b></code>
+</pre>
+
+<p class="warning">Gadu-Gadu nie obsługuje więcej niż jednego obrazka w wiadomości.</p>
+
+<h4 id="classBotMsg_appendixTags">Wspierane tagi HTML</h4>
+
+<p>Wspierane tagi HTML:</p>
+
+<ul>
+<li>a (tylko atrybut href)</li>
+<li>b</li>
+<li>br</li>
+<li>h1</li>
+<li>h2</li>
+<li>h3</li>
+<li>i</li>
+<li>img (tylko atrybut src)</li>
+<li>li</li>
+<li>ol (także atrybut start)</li>
+<li>p</li>
+<li>span</li>
+<li>strong</li>
+<li>sub</li>
+<li>sup</li>
+<li>u</li>
+<li>ul</li>
+</ul>
+
+<p>Wspierane atrybuty:</p>
+
+<ul>
+<li>color (tylko w formacie: #ABC lub #AABBCC)</li>
+<li>style</li>
+</ul>
+
+<h3 id="appendixHelpers">Funkcje pomocnicze</h3>
+
+<p>Poniższe klasy zawierają funkcje często używane w modułach.</p>
+
+<h4 id="appendixHelpers_classCalendar_methodParseDate">calendar::parse_date()</h4>
+
+<p>Metoda <code><var>parse_date</var></code> klasy <code><var>calendar</var></code> jest zdefiniowana następująco:</p>
+
+<pre>
+<code><b>static function</b> <a href="#appendixHelpers_classCalendar_methodParseDate"><var>parse_date</var></a><b>(</b><var>$date</var><b>);</b></code>
+</pre>
+
+<p>Przetwarza ona tekst <code><var>$date</var></code> (np. <code><cite>'wczoraj'</cite></code>, <code><cite>'jutro'</cite></code>, ale także <code><cite>'1 stycznia 2000'</cite></code>) na uniksowy znacznik czasu, który zwraca.</p>
+
+<p class="example">Przykład:</p>
+<pre>
+<code><var>$data</var> <b>=</b> <a href="#appendixHelpers_classCalendar_methodParseDate"><var>calendar</var><b>::</b><var>parse_date</var></a><b>(</b><cite>'29 stycznia 2009'</cite><b>);</b>
+<var>$wzor</var> <b>=</b> <a href="http://php.net/mktime"><var>mktime</var></a><b>(</b><var>0</var><b>,</b> <var>0</var><b>,</b> <var>0</var><b>,</b> <var>1</var><b>,</b> <var>29</var><b>,</b> <var>2009</var><b>);</b>
+<a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$data</var> <b>==</b> <var>$wzor</var><b>);</b></code>
+</pre>
+
+<h4 id="appendixHelpers_classFuncs_methodUtfToAscii">funcs::utfToAscii()</h4>
+
+<p>Metoda <code><var>utfToAscii</var></code> klasy <code><var>funcs</var></code> jest zdefiniowana następująco:</p>
+
+<pre>
+<code><b>static function</b> <a href="#appendixHelpers_classFuncs_methodUtfToAscii"><var>utfToAscii</var></a><b>(</b><var>$utf</var><b>);</b></code>
+</pre>
+
+<p>Polskie znaki w zmiennej <code><var>$utf</var></code> zamienia w litery alfabetu angielskiego (ó => o, ź => z itd.), wykonuje na tekście <code><a href="http://php.net/strtolower"><var>strtolower</var></a><b>()</b></code> oraz <code><a href="http://php.net/trim"><var>trim</var></a><b>()</b></code>, po czym zwraca tak zmodyfikowaną treść.</p>
+
+<h3 id="appendixDataStorage">Przechowywanie danych i ich aktualizacja</h3>
+
+<p>Jeśli istnieje potrzeba okresowego aktualizowania danych (np. kursów walut) można użyć do tego przygotowanego specjalnie dla tego bota narzędzia.</p>
+
+<p>W folderze /data/(nazwa modułu)/ należy utworzyć plik crontab, zgodny ze <a href="http://pl.wikipedia.org/wiki/Crontab">składnią crontaba</a>.</p>
+
+<p class="example">Przykład pliku crontab:</p>
+<pre>
+<code><i># To jest komentarz - znak # musi być pierwszym znakiem w linijce!
+
+# Uruchamiaj się codziennie, co dwie godziny, między północą a dwudziestą.</i>
+<var>0 0</var><b>-</b><var>20</var><b>/</b><var>2</var> <b>* *   *</b>  <cite>co_dwie_godziny.php</cite>
+<i># Uruchamiaj się o 4:00 w każdą niedzielę</i>
+<var>0      4</var> <b>* *</b>   <var>0</var>  <cite>niedziela.php</cite>
+<i># Uruchamiaj się w każdy poniedziałek i środę o 10:00</i>
+<var>0     10</var> <b>* *</b> <var>1</var><b>,</b><var>3</var>  <cite>pon_sr_10.php</cite></code>
+</pre>
+
+<p class="warning"> Pierwsze pole (minuty) jest pomijane, tj. nie można uruchamiać programu częsciej niż raz na godzinę!</p>
+<p class="warning"> W pole 6 należy, zamiast pełnej komendy, wpisać jednynie nazwę pliku z rozszerzeniem .php, znajdującego się w katalogu z plikiem crontab (lub względną ścieżkę do niego).</p>
+
+<script type="text/javascript">
+// <![CDATA[
+function generateToc() {
+	var menu = document.createElement('ol');
+	document.getElementById('menu').appendChild(menu);
+	var elems = document.querySelectorAll('h3,h4');
+	var now = 3;
+	
+	for(var i=0; i<elems.length; i++) {
+		if(elems[i].id == '') {
+			continue;
+		}
+		
+		var level = parseInt(elems[i].tagName.slice(1));
+		
+		if(level < now) {
+			while(level < now) {
+				menu = menu.parentNode.parentNode;
+				now--;
+			}
+		}
+		else if(level > now) {
+			while(level > now) {
+				if(menu.lastChild) {
+					ol = document.createElement('ol');
+					menu.lastChild.appendChild(ol);
+					menu = ol;
+				}
+				else
+				{
+					li = document.createElement('li');
+					ol = document.createElement('ol');
+					li.appendChild(ol);
+					menu.appendChild(li);
+					menu = ol;
+				}
+				
+				now++;
+			}
+		}
+		
+		var li = document.createElement('li');
+		var a = document.createElement('a');
+		a.href = '#'+elems[i].id;
+		a.appendChild(document.createTextNode(elems[i].textContent));
+		li.appendChild(a);
+		menu.appendChild(li);
+	}
+}
+
+generateToc();
+// ]]>
+</script>
+
+</body>
+</html>

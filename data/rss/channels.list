@@ -1,0 +1,12 @@
+# adres						kod		alias,alias,alias			nazwa
+http://wiadomosci.onet.pl/2,kategoria.rss	onet		DEFAULT,o,onet.pl			Onet.pl
+http://wiadomosci.wp.pl/ver,rss,rss.xml		wp		w,wirtualna polska,wp.pl		WP.pl
+http://kanaly.rss.interia.pl/fakty.xml		interia		i,interia.pl				Interia.pl
+http://rss.gazeta.pl/pub/rss/wiadomosci.xml	gazeta		g,gazeta.pl				Gazeta.pl
+http://rss.di.com.pl/di.rss			di		dziennik internautow			Dziennik Internautów
+http://hacking.pl/rss.xml			hacking		h,hacking.pl				Hacking.pl
+http://linuxnews.pl/feed/			linuxnews	l,linux,ln,linux news,linuxnews.pl	Linux News
+http://rss.bankier.pl/wiadomosci/wiadomosci.xml	bankier		bankier.pl				Bankier.pl
+http://bash.org.pl/rss/				bash		b,sh,bash.org,bash.org.pl		bash.org.pl
+
+# http://a.pl/rss.xml				a		NULL					A.pl

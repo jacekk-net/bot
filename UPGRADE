@@ -1,0 +1,65 @@
+==============================
+ AKTUALIZACJA Z WERSJI 2.0 RC
+==============================
+
+* usuń pliki ./modules/00_mod_help.php oraz ./modules/80_lang.php
+* zastąp wszystkie pliki oraz katalogi w folderach ./class oraz ./modules
+* usuń wszystkie pliki z katalogu ./cache
+* pobierz Application ID ze strony http://www.bing.com/developers/appids.aspx
+  (wymaga identyfikatora Windows Live ID), a następnie wpisz go w pliku
+  ./modules/80_lang/handler.php w miejsu:
+
+class bot_lang_module implements BotModule {
+	private $APPID = '';
+
+  które po edycji ma wyglądać tak:
+
+class bot_lang_module implements BotModule {
+	private $APPID = 'A123BC9238...ADD';
+
+
+================================
+ AKTUALIZACJA Z WERSJI 2.0 Beta
+================================
+
+* zastąp wszystkie pliki w folderach ./class oraz ./modules
+* zastąp wszystkie pliki (bez podfolderów!) w ./data
+* zastąp pliki aliases i pobierz.php w ./data/tv
+
+
+===========================
+ AKTUALIZACJA Z WERSJI 1.*
+===========================
+
+* Usuń wszystkie pliki i foldery za wyjątkiem:
+    ./data
+    ./db
+    ./modules
+* Wgraj pliki z folderu - możesz pominąć w/w katalogi, za wyjątkiem
+    ./data/*.php
+    ./data/*.sh
+    ./data/tv/aliases
+    ./data/tv/pobierz.php
+    ./modules/00_legacy
+  który w całości musi znaleźć się na miejscu.
+* Nadaj uprawnienia do zapisu w nowych folderach:
+    ./cache
+    ./database
+* Sprawdź, czy serwer spełnia wymagania bota otwierając w przeglądarce plik
+    test.php
+* Zarejestruj nowy adres bota w Gadu-Gadu/IMified.com (BotGG.php/BotIMI.php)
+
+
+UWAGA! Jeśli dodajesz/usuwasz moduły lub komendy KONIECZNIE usuń wszystkie
+pliki z katalogu ./cache - w przeciwnym wypadku w/w polecenia mogą powodować
+błędy w działaniu bota!
+
+
+ INFORMACJA
+------------
+W razie problemów zacznij od zmiany
+    error_reporting(E_COMPILE_ERROR|E_PARSE);
+na
+    error_reporting(E_ALL & ~E_NOTICE);
+w pliku
+    ./class/std.php

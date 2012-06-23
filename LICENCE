@@ -1,0 +1,51 @@
+ __       __   ______  _______  __   __   ______        __     ____
+|  |     |  | /  ____||   ____||  \ |  | /  ____|      |  |   /    \
+|  |     |  ||  /     |  |__   |   \|  ||  /           |  |  /  /\  \
+|  |     |  ||  |     |   __|  |       ||  |      __   |  | /  /__\  \
+|  |____ |  ||  \____ |  |____ |  |\   ||  \____ |  \__/  ||   ____   |
+|_______||__| \______||_______||__| \__| \______| \______/ |__|    |__|
+
+======================
+Creative Commons by-nc
+======================
+
+Niniejszy program, za wyjątkiem wymienionych poniżej zbiorów, jest rozpowszechniany na licencji:
+
+Creative Commons-Uznanie Autorstwa-Użycie Niekomercyjne 2.5 (CC-by-nc 2.5)
+
+Pełna treść licencji jest dostępna na stronie:
+http://creativecommons.org/licenses/by-nc/2.5/legalcode.pl
+
+
+=======
+GNU GPL
+=======
+
+Niektóre zbiory danych wykorzystywane w programie są udostępniane na licencji GNU GPL, której treść znajduje się w pliku GNU-GPL. Bot może działać bez tych plików po usunięciu odpowiedniego modułu z katalogu /modules/
+
+Zbiory na w/w licencji:
+
+/data/data/data.php
+   http://www.baseciq.org/tools/stare-projekty
+   http://www.baseciq.org/wp-content/uploads/2008/04/imieniny-php.gz
+
+/data/data/imieniny.php
+   praca pochodna od w/w na potrzeby bota
+
+/data/synonimy/thesaurus.txt
+   http://synonimy.ux.pl/
+   http://prdownloads.sourceforge.net/synonimy/thesaurus-1.5.txt.gz?download
+
+/data/synonimy/thesaurus.res
+   praca pochodna od w/w na potrzeby bota, wygenerowana za pomoca: /data/synonimy/parse.php
+
+
+
+=============
+Inna/nieznana
+=============
+
+Poniższe zbiory zostały znalezione w Internecie, a autor nie zaznaczył licencji:
+
+/data/data/data2.php
+  http://www.sebastianpawlak.com/index.php?color=&id=01010501&jezyk=0
