@@ -50,7 +50,9 @@ testdir('./data/rss');
 testdir('./data/tv');
 testdir('./data/tv/cache');
 testdir('./db');
-testdir('./database');
+if(is_dir('./database')) {
+	testdir('./database');
+}
 
 echo '</table>';
 ?>

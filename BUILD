@@ -5,10 +5,12 @@ REMOVEDIR /data/e
 # GIT
 REMOVEGLOB /.git/*
 REMOVEDIR /.git
-
-# TEST
-REMOVEGLOB /test/*
-REMOVEDIR /test
+REMOVE /cache/.emptydir
+REMOVE /data/humor/archiwum/.emptydir
+REMOVE /data/kurs/archiwum/.emptydir
+REMOVE /data/lotto/archiwum/.emptydir
+REMOVE /data/tv/cache/.emptydir
+REMOVE /db/.emptydir
 
 # Moje ustawienia
 REPLACEBETWEEN /class/config.php "'numer' => '" ' ""

@@ -51,8 +51,8 @@ class BotUser {
 		$this->interface = $data['scheme'];
 		$this->uid = strtr($data['user'], array('\\@' => '@'));
 		$this->network = $data['host'];
-		$this->bot = substr($data['path'], 1);
-		$this->params = $data['query'];
+		$this->bot = substr(@$data['path'], 1);
+		$this->params = @$data['query'];
 	}
 	
 	function __get($name) {

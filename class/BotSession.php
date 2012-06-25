@@ -72,7 +72,9 @@ class BotSession {
 			}
 		}
 		catch(Exception $e) {
-			@unlink(BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite');
+			if(file_exists(BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite')) {
+				@unlink(BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite');
+			}
 			throw $e;
 		}
 	}
