@@ -1,10 +1,20 @@
+===========================
+ AKTUALIZACJA Z WERSJI 2.1
+===========================
+
+* usuń zawartość katalogów ./cache oraz ./data/tv/cache
+* zastąp wszystkie pliki oraz katalogi w folderach ./data, ./class
+  (plik update.sh można pominąć)
+* zastąp plik ./modules/50_lotto.php nowym
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
+
 ==============================
  AKTUALIZACJA Z WERSJI 2.0 RC
 ==============================
 
 * usuń pliki ./modules/00_mod_help.php oraz ./modules/80_lang.php
 * zastąp wszystkie pliki oraz katalogi w folderach ./class oraz ./modules
-* usuń wszystkie pliki z katalogu ./cache
+* usuń wszystkie pliki z katalogu ./cache oraz ./data/tv/cache
 * pobierz Application ID ze strony http://www.bing.com/developers/appids.aspx
   (wymaga identyfikatora Windows Live ID), a następnie wpisz go w pliku
   ./modules/80_lang/handler.php w miejsu:
@@ -35,13 +45,15 @@ class bot_lang_module implements BotModule {
     ./data
     ./db
     ./modules
-* Wgraj pliki z folderu - możesz pominąć w/w katalogi, za wyjątkiem
+* Usuń wszystkie pliki z katalogu ./data/tv/cache
+* Wgraj pliki z folderu - możesz pominąć wyżej wymienione katalogi, za wyjątkiem
     ./data/*.php
     ./data/*.sh
     ./data/tv/aliases
     ./data/tv/pobierz.php
     ./modules/00_legacy
   który w całości musi znaleźć się na miejscu.
+* Popraw plik ./data/update.sh tak, by zwierał prawdziwą ścieżkę do bota.
 * Nadaj uprawnienia do zapisu w nowych folderach:
     ./cache
     ./database

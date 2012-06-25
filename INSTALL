@@ -11,9 +11,9 @@
   ustalony przy rejestracji adres
 * ustaw serwer WWW tak, by plik BotIMI.php był wykonywany po wejściu na
   ustalony w IMified.com adres
-* zmień /SCIEZKA/DO/BOTA w pliku data/update.sh na rzeczywistą, bezwzględną
+* zmień /sciezka/do/bota w pliku data/update.sh na rzeczywistą, bezwzględną
   ścieżkę do katalogu skryptu
-* wykonuj za pomocą crona polecenie `/SCIEZKA/DO/BOTA/data/update.sh` ok.
+* wykonuj za pomocą crona polecenie `/sciezka/do/bota/data/update.sh` ok.
   20 minut po każdej pełnej godzinie
 * uruchom /data/update_all.sh (będąc w katalogu ./data) od razu po instalacji
 * pobierz Application ID ze strony http://www.bing.com/developers/appids.aspx
