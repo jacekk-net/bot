@@ -58,7 +58,7 @@ $stations = array(
 	217 => 'ZigZap',
 	361 => 'Cartoon Network',
 );
-$NUMOF = count($stations)*7;
+$NUMOF = count($stations);
 
 $c = curl_init();
 $out = fopen('./xmltv-pre.xml', 'w');
