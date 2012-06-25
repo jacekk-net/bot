@@ -7,6 +7,7 @@ REMOVEGLOB /.git/*
 REMOVEDIR /.git
 REMOVE /cache/.emptydir
 REMOVE /data/humor/archiwum/.emptydir
+REMOVE /data/kino/cache/.emptydir
 REMOVE /data/kurs/archiwum/.emptydir
 REMOVE /data/lotto/archiwum/.emptydir
 REMOVE /data/tv/cache/.emptydir
