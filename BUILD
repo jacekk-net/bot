@@ -11,7 +11,7 @@ REMOVE /data/kino/cache/.emptydir
 REMOVE /data/kurs/archiwum/.emptydir
 REMOVE /data/lotto/archiwum/.emptydir
 REMOVE /data/tv/cache/.emptydir
-REMOVE /db/.emptydir
+REMOVE /database/.emptydir
 
 # Moje ustawienia
 REPLACEBETWEEN /class/config.php "'numer' => '" ' ""
