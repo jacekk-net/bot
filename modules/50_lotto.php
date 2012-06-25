@@ -8,23 +8,29 @@ class lotto implements module {
 			'wyniki' => 'cmd_lotto',
 			'l' => 'cmd_lotto',
 			'duzy' => 'cmd_lotto',
+			'dl' => 'cmd_lotto',
+			
 			'express' => 'cmd_lotto',
 			'expres' => 'cmd_lotto',
 			'ekspress' => 'cmd_lotto',
 			'ekspress' => 'cmd_lotto',
 			'exp' => 'cmd_lotto',
+			'ex' => 'cmd_lotto',
+			'el' => 'cmd_lotto',
+			'mini' => 'cmd_lotto',
+			
 			'multi' => 'cmd_lotto',
 			'multimulti' => 'cmd_lotto',
 			'multilotek' => 'cmd_lotto',
+			'mm' => 'cmd_lotto',
+			
+			'ka' => 'cmd_lotto',
+			'kaskada' => 'cmd_lotto',
+			
 			'twoj' => 'cmd_lotto',
 			'tsn' => 'cmd_lotto',
 			'jk' => 'cmd_lotto',
 			'joker' => 'cmd_lotto',
-			'el' => 'cmd_lotto',
-			'ex' => 'cmd_lotto',
-			'mm' => 'cmd_lotto',
-			'ml' => 'cmd_lotto',
-			'dl' => 'cmd_lotto'
 		);
 	}
 	
@@ -42,7 +48,7 @@ class lotto implements module {
 			GGapi::putRichText('lotek, wyniki, l', TRUE);
 			GGapi::putRichText(')'."\n".'   Podaje wyniki ostatniego losowania gry Totalizatora Sportowego ');
 			GGapi::putRichText('[gra]', FALSE, TRUE);
-			GGapi::putRichText(', gdzie gra to: dl, el, mm lub jk.');
+			GGapi::putRichText(', gdzie gra to: lotto, mini (Mini Lotto), mm (Multi Multi), kaskada lub joker.');
 		}
 	}
 	
@@ -60,13 +66,15 @@ class lotto implements module {
 			'mm222' => 'Multi Multi (22:00)',
 			'jk' => 'Joker',
 			'jk2' => 'Jokera',
+			'ka' => 'Kaskada',
+			'ka2' => 'Kaskady',
 		);
 		$arg_start = array(
 			'dl' => 'dl', 'duzego' => 'dl', 'duzy' => 'dl', 'duzylotek' => 'dl',
-			'el' => 'el', 'express' => 'el', 'ekspress' => 'el', 'expres' => 'el', 'ekspres' => 'el', 'ex' => 'el', 'mini' => 'el', 'm' => 'el', 'mlotto' => 'el', 'mini' => 'el',
-			'ml' => 'ml', 'multilotka' => 'ml',
-			'mm' => 'mm', 'multi' => 'mm', 'multimulti' => 'mm',
-			'jk' => 'jk', 'joker' => 'jk', 'tsn' => 'jk', 'numerek' => 'jk', 'numerka' => 'jk', 'twojego' => 'jk', 'twoj' => 'jk', 'szczesliwego' => 'jk', 'szczesliwy' => 'jk',
+			'el' => 'el', 'express' => 'el', 'ekspress' => 'el', 'expres' => 'el', 'ekspres' => 'el', 'ex' => 'el', 'minilotto' => 'el', 'm' => 'el', 'ml' => 'el', 'mlotto' => 'el', 'mini' => 'el',
+			'mm' => 'mm', 'multilotka' => 'mm', 'multi' => 'mm', 'multimulti' => 'mm',
+			'jk' => 'jk', 'joker' => 'jk', 'jokera' => 'jk', 'tsn' => 'jk', 'numerek' => 'jk', 'numerka' => 'jk', 'twojego' => 'jk', 'twoj' => 'jk', 'szczesliwego' => 'jk', 'szczesliwy' => 'jk',
+			'ka' => 'ka', 'kaskada' => 'ka', 'k' => 'ka',
 		);
 		$arg = explode(' ', funcs::utfToAscii($arg));
 		array_unshift($arg, $name);
@@ -81,7 +89,7 @@ class lotto implements module {
 			}
 		}
 		
-		if(!$gra) {
+		if(!isset($gra) || !$gra) {
 			$gra = 'dl';
 		}
 		
