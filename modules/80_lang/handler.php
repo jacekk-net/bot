@@ -15,7 +15,7 @@ class msapi extends msapi_config {
 		
 		foreach($params as $name => &$param) {
 			if(substr($name, 0, 1)!='$' && is_string($param)) {
-				$param = '\''.$param.'\'';
+				$param = '\''.strtr($param, array('\'' => '\'\'')).'\'';
 			}
 		}
 		unset($param);
