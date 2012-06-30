@@ -16,17 +16,18 @@
 * wykonuj za pomocą crona polecenie `/sciezka/do/bota/data/update.sh` ok.
   20 minut po każdej pełnej godzinie
 * uruchom /data/update_all.sh (będąc w katalogu ./data) od razu po instalacji
-* pobierz Application ID ze strony http://www.bing.com/developers/appids.aspx
-  (wymaga identyfikatora Windows Live ID), a następnie wpisz go w pliku
-  ./modules/80_lang/handler.php w miejsu:
+* pobierz Account Key ze strony https://datamarket.azure.com/
+  (wymaga identyfikatora Windows Live ID), uzyskaj subskrybcję Microsoft Translator:
+  https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
+  a następnie Account Key w pliku ./modules/80_lang/msapi_config.php w miejscu:
 
-class bot_lang_module implements BotModule {
-	private $APPID = '';
+class msapi_config {
+	protected $accountKey = '';
 
   które po edycji ma wyglądać tak:
 
-class bot_lang_module implements BotModule {
-	private $APPID = 'A123BC9238...ADD';
+class msapi_config {
+	protected $accountKey = 'A123BC9238...ADD';
 
 
 ------------

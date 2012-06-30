@@ -1,4 +1,18 @@
 ===========================
+ AKTUALIZACJA Z WERSJI 2.2
+===========================
+
+* usuń zawartość katalogu ./modules/80_lang
+* wgraj ./module/80_lang z paczki
+* uzyskaj Azure Datamarket acoount key ze strony:
+  https://datamarket.azure.com/
+  oraz uzyskaj jakąkolwiek subskrypcję Microsoft Translator pod adresem:
+  https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
+* Account Key wpisz w przewidzianym miejscu w pliku
+  ./modules/80_lang/msapi_config.php
+* zastąp plik ./class/legacy/main.php
+
+===========================
  AKTUALIZACJA Z WERSJI 2.1
 ===========================
 

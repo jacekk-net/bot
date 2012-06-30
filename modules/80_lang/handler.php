@@ -1,7 +1,7 @@
 <?php
+require_once(dirname(__FILE__).'/msapi.php');
+
 class bot_lang_module implements BotModule {
-	private $APPID = '';
-	
 	function handle($msg, $params) {
 		$args = trim($msg->args);
 		
@@ -23,13 +23,22 @@ class bot_lang_module implements BotModule {
 		$data = jsarray::parse($data);
 		
 		if(!$data OR count($data)==0 OR count($data[1])==0) {
-			$data = file_get_contents('http://api.microsofttranslator.com/v2/Http.svc/Translate?appId='.urlencode($this->APPID).'&text='.urlencode($args).'&from='.$params[0].'&to='.$params[1]);
+			$api = new msapi('https://api.datamarket.azure.com/Bing/MicrosoftTranslator/');
+			$data = $api->execute(array(
+				'From' => $params[0],
+				'To' => $params[1],
+				'Text' => $args,
+				'$skip' => 0,
+				'$top' => 1
+			));
 			
-			if(!$data) {
-				return new BotMsg('Błąd podczas pobierania danych ze słownika. Przepraszamy.');
+			if(!$data || !isset($data['d']['results'][0]['Text'])) {
+				return new BotMsg('Błąd podczas pobierania danych z tłumacza. Przepraszamy.');
 			}
 			
-			return new BotMsg('<u>Tłumaczenie (by Microsoft Translator):</u><br />'."\n".strip_tags($data));
+			$data = $data['d']['results'][0]['Text'];
+			
+			return new BotMsg('<u>Tłumaczenie (by Microsoft Translator):</u><br />'."\n".htmlspecialchars($data));
 		}
 		else
 		{
