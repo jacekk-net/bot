@@ -4,13 +4,13 @@
 
 * usuń zawartość katalogu ./modules/80_lang
 * wgraj ./module/80_lang z paczki
-* uzyskaj Azure Datamarket acoount key ze strony:
+* zastąp plik ./class/legacy/main.php
+* pobierz Azure Datamarket account key ze strony:
   https://datamarket.azure.com/
   oraz uzyskaj jakąkolwiek subskrypcję Microsoft Translator pod adresem:
   https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
 * Account Key wpisz w przewidzianym miejscu w pliku
   ./modules/80_lang/msapi_config.php
-* zastąp plik ./class/legacy/main.php
 
 ===========================
  AKTUALIZACJA Z WERSJI 2.1
@@ -21,6 +21,15 @@
   (plik update.sh można pominąć)
 * zastąp plik ./modules/50_lotto.php nowym
 * dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
+* zastąp plik ./class/legacy/main.php
+* usuń zawartość katalogu ./modules/80_lang
+* wgraj ./module/80_lang z paczki
+* pobierz Azure Datamarket account key ze strony:
+  https://datamarket.azure.com/
+  oraz uzyskaj jakąkolwiek subskrypcję Microsoft Translator pod adresem:
+  https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
+* Account Key wpisz w przewidzianym miejscu w pliku
+  ./modules/80_lang/msapi_config.php
 
 ==============================
  AKTUALIZACJA Z WERSJI 2.0 RC
@@ -29,17 +38,18 @@
 * usuń pliki ./modules/00_mod_help.php oraz ./modules/80_lang.php
 * zastąp wszystkie pliki oraz katalogi w folderach ./class oraz ./modules
 * usuń wszystkie pliki z katalogu ./cache oraz ./data/tv/cache
-* pobierz Application ID ze strony http://www.bing.com/developers/appids.aspx
-  (wymaga identyfikatora Windows Live ID), a następnie wpisz go w pliku
-  ./modules/80_lang/handler.php w miejsu:
+* pobierz Account Key ze strony https://datamarket.azure.com/
+  (wymaga identyfikatora Windows Live ID) i uzyskaj subskrybcję Microsoft Translator:
+  https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
+  a następnie Account Key w pliku ./modules/80_lang/msapi_config.php w miejscu:
 
-class bot_lang_module implements BotModule {
-	private $APPID = '';
+class msapi_config {
+        protected $accountKey = '';
 
   które po edycji ma wyglądać tak:
 
-class bot_lang_module implements BotModule {
-	private $APPID = 'A123BC9238...ADD';
+class msapi_config {
+        protected $accountKey = 'A123BC9238...ADD';
 
 
 ================================
@@ -49,36 +59,14 @@ class bot_lang_module implements BotModule {
 * zastąp wszystkie pliki w folderach ./class oraz ./modules
 * zastąp wszystkie pliki (bez podfolderów!) w ./data
 * zastąp pliki aliases i pobierz.php w ./data/tv
+* wykonaj polecenia z działu "AKTUALIZACJA Z WERSJI 2.0 RC"
 
 
-===========================
- AKTUALIZACJA Z WERSJI 1.*
-===========================
-
-* Usuń wszystkie pliki i foldery za wyjątkiem:
-    ./data
-    ./db
-    ./modules
-* Usuń wszystkie pliki z katalogu ./data/tv/cache
-* Wgraj pliki z folderu - możesz pominąć wyżej wymienione katalogi, za wyjątkiem
-    ./data/*.php
-    ./data/*.sh
-    ./data/tv/aliases
-    ./data/tv/pobierz.php
-    ./modules/00_legacy
-  który w całości musi znaleźć się na miejscu.
-* Popraw plik ./data/update.sh tak, by zwierał prawdziwą ścieżkę do bota.
-* Nadaj uprawnienia do zapisu w nowych folderach:
-    ./cache
-    ./database
-* Sprawdź, czy serwer spełnia wymagania bota otwierając w przeglądarce plik
-    test.php
-* Zarejestruj nowy adres bota w Gadu-Gadu/IMified.com (BotGG.php/BotIMI.php)
-
-
-UWAGA! Jeśli dodajesz/usuwasz moduły lub komendy KONIECZNIE usuń wszystkie
-pliki z katalogu ./cache - w przeciwnym wypadku w/w polecenia mogą powodować
-błędy w działaniu bota!
+ UWAGA
+-------
+Jeśli dodajesz/usuwasz moduły lub komendy KONIECZNIE usuń wszystkie pliki
+z katalogu ./cache - w przeciwnym wypadku polecenia te mogą powodować błędy
+w działaniu bota!
 
 
  INFORMACJA
