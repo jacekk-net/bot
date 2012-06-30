@@ -1,5 +1,46 @@
 <?php
-require_once(dirname(__FILE__).'/msapi.php');
+require_once(dirname(__FILE__).'/msapi_config.php');
+
+class msapi extends msapi_config {
+	public $url;
+	
+	function __construct($url) {
+		$this->url = $url;
+	}
+	
+	function execute($params) {
+		if(!is_array($params)) {
+			throw new Exception('Przekazany parametr nie jest tablicą');
+		}
+		
+		foreach($params as $name => &$param) {
+			if(substr($name, 0, 1)!='$' && is_string($param)) {
+				$param = '\''.$param.'\'';
+			}
+		}
+		unset($param);
+		$params['$format'] = 'json';
+		
+		$context = stream_context_create(array(
+			'http' => array(
+				'request_fulluri' => TRUE,
+				'header' => 'Authorization: Basic '.base64_encode(':'.$this->accountKey)
+			),
+		));
+		
+		$content = file_get_contents($this->url.'?'.http_build_query($params, '', '&'), FALSE, $context);
+		if(!$content) {
+			return FALSE;
+		}
+		
+		$content = json_decode($content, TRUE);
+		if(!$content) {
+			return FALSE;
+		}
+		
+		return $content;
+	}
+}
 
 class bot_lang_module implements BotModule {
 	function handle($msg, $params) {
@@ -23,7 +64,7 @@ class bot_lang_module implements BotModule {
 		$data = jsarray::parse($data);
 		
 		if(!$data OR count($data)==0 OR count($data[1])==0) {
-			$api = new msapi('https://api.datamarket.azure.com/Bing/MicrosoftTranslator/');
+			$api = new msapi('https://api.datamarket.azure.com/Bing/MicrosoftTranslator/Translate');
 			$data = $api->execute(array(
 				'From' => $params[0],
 				'To' => $params[1],
