@@ -60,6 +60,8 @@ $stations = array(
 );
 $NUMOF = count($stations);
 
+ini_set('mbstring.substitute_character', 'none');
+
 $c = curl_init();
 $out = fopen('./xmltv-pre.xml', 'w');
 fwrite($out, '<?xml version="1.0" encoding="UTF-8" ?>
@@ -85,11 +87,12 @@ foreach($stations as $num => $station) {
 			return;
 		}
 		
+		$data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
 		file_put_contents('./cache/'.$num.'_'.$date, $data);
 		unset($data);
 	}
 	
-	$doc = new DOMDocument;
+	$doc = new DOMDocument('1.0', 'utf-8');
 	@$doc->loadHTMLFile('./cache/'.$num.'_'.$date);
 	
 	$wp = new wp_parse($doc);

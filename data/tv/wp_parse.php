@@ -74,8 +74,6 @@ class wp_parse {
 	function xmltv($id, $fp) {
 		$program = array();
 		
-		ini_set('mbstring.substitute_character', 'none');
-		
 		$days_dom = $this->xpath->query('.//ul[@class="lsDay"]//li', $this->context);
 		$days = array();
 		foreach($days_dom as $day) {
@@ -99,8 +97,8 @@ class wp_parse {
 					
 					$program[$num][] = array(
 						$godzina,
-						mb_convert_encoding($nazwa, 'UTF-8', 'UTF-8'),
-						mb_convert_encoding($opis, 'UTF-8', 'UTF-8')
+						$nazwa,
+						$opis
 					);
 				}
 				unset($programs_dom, $programs);
