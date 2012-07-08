@@ -95,11 +95,7 @@ class wp_parse {
 					$nazwa = $this->xpath->query('.//h3', $programs)->item(0)->textContent;
 					$opis = $this->xpath->query('.//p', $programs)->item(0)->textContent;
 					
-					$program[$num][] = array(
-						$godzina,
-						$nazwa,
-						$opis
-					);
+					$program[$num][] = array($godzina, $nazwa, $opis);
 				}
 				unset($programs_dom, $programs);
 			}

@@ -3,8 +3,10 @@
 ===========================
 
 * usuń zawartość katalogu ./modules/80_lang
-* wgraj ./module/80_lang z paczki
-* zastąp plik ./class/legacy/main.php
+* nadpisz wszytskie pliki w katalogach ./class i ./modules,
+  za wyjątkiem ./class/config.php
+* zastąp plik ./data/lotto/pobierz.php
+* zastąp plik ./data/tv/pobierz.php
 * pobierz Azure Datamarket account key ze strony:
   https://datamarket.azure.com/
   oraz uzyskaj jakąkolwiek subskrypcję Microsoft Translator pod adresem:
@@ -16,14 +18,12 @@
  AKTUALIZACJA Z WERSJI 2.1
 ===========================
 
-* usuń zawartość katalogów ./cache oraz ./data/tv/cache
-* zastąp wszystkie pliki oraz katalogi w folderach ./data, ./class
-  (plik update.sh można pominąć)
-* zastąp plik ./modules/50_lotto.php nowym
+* usuń zawartość katalogów ./cache, ./data/tv/cache oraz ./modules/80_lang
+* nadpisz wszytskie pliki w katalogach ./class i ./modules,
+  za wyjątkiem ./class/config.php
+* zastąp plik ./data/lotto/pobierz.php
+* zastąp plik ./data/tv/pobierz.php
 * dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
-* zastąp plik ./class/legacy/main.php
-* usuń zawartość katalogu ./modules/80_lang
-* wgraj ./module/80_lang z paczki
 * pobierz Azure Datamarket account key ze strony:
   https://datamarket.azure.com/
   oraz uzyskaj jakąkolwiek subskrypcję Microsoft Translator pod adresem:
@@ -57,7 +57,8 @@ class msapi_config {
 ================================
 
 * zastąp wszystkie pliki w folderach ./class oraz ./modules
-* zastąp wszystkie pliki (bez podfolderów!) w ./data
+* zastąp wszystkie pliki (bez podfolderów!) w ./data,
+  a następnie popraw ścieżkę do bota w ./data/update.sh
 * zastąp pliki aliases i pobierz.php w ./data/tv
 * wykonaj polecenia z działu "AKTUALIZACJA Z WERSJI 2.0 RC"
 
