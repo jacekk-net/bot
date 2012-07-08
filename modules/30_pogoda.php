@@ -87,6 +87,24 @@ class pogoda implements module {
 		}
 	}
 	
+	static function putIcon($icon) {
+		if(!empty($icon)) {
+			if(!file_exists('./data/pogoda/'.basename($icon))) {
+				if(substr($icon, 0, 1) == '/') {
+					$icon = 'http://www.google.com'.$icon;
+				}
+				$img = @file_get_contents($icon);
+				if($img) {
+					file_put_contents('./data/pogoda/'.basename($icon), $img);
+				}
+			}
+			
+			GGapi::putImage('./data/pogoda/'.basename($icon));
+			GGapi::putText("\n");
+		}
+
+	}
+	
 	static function cmd_pogoda($name, $arg) {
 		if(empty($arg)) {
 			$arg = database::get($_GET['from'], 'pogoda', 'miasto');
@@ -97,7 +115,7 @@ class pogoda implements module {
 					$arg = 'Warszawa';
 					$forced = TRUE;
 				}
-				GGapi::putText('Nie ustawiono miasta (pomoc - wpisz: help miasto) - '.(!$forced ? 'na podstawie danych z katalogu publicznego ' : '').'wybieram '.$arg."\n\n");
+				GGapi::putText('Nie ustawiono miasta (pomoc - wpisz: help miasto) - '.(!$forced ? 'na podstawie danych z katalogu publicznego ' : '').'wybieram miasto '.$arg."\n\n");
 			}
 		}
 		
@@ -144,35 +162,16 @@ class pogoda implements module {
 		GGapi::putRichText('Pogoda dla miasta '.$miasto.', '.$region."\n\n", TRUE);
 		
 		GGapi::putRichText('Teraz'."\n", TRUE);
-		$icon = (string)$dane->weather->current_conditions->icon['data'];
-		if(!empty($icon)) {
-			if(!file_exists('./data/pogoda/'.basename($icon))) {
-				if(substr($icon, 0, 1) == '/') {
-					$img = 'http://www.google.com'.$img;
-				}
-				$img = @file_get_contents($icon);
-				if($img) {
-					file_put_contents('./data/pogoda/'.basename($icon), $img);
-				}
-			}
-			
-			GGapi::putImage('./data/pogoda/'.basename($icon));
-			$txt = "\n";
-		}
+		self::putIcon((string)$dane->weather->current_conditions->icon['data']);
+		
 		$condition = (string)$dane->weather->current_conditions->condition['data'];
 		GGapi::putRichText($txt.($condition ? $condition."\n" : '').'Temp.: '.($dane->weather->current_conditions->temp_c['data']).'°C'."\n".($dane->weather->current_conditions->humidity['data'])."\n".($dane->weather->current_conditions->wind_condition['data']));
 		
 		$num = TRUE;
 		foreach($dane->weather->forecast_conditions as $day) {
 			GGapi::putRichText("\n\n".($num ? 'Później' : $short2day[(string)$day->day_of_week['data']])."\n", TRUE);
-			if(!file_exists('./data/pogoda/'.basename($day->icon['data']))) {
-				$img = @file_get_contents($day->icon['data']);
-				if($img) {
-					file_put_contents('./data/pogoda/'.basename($day->icon['data']), $img);
-				}
-			}
-			GGapi::putImage('./data/pogoda/'.basename($day->icon['data']));
-			GGapi::putRichText("\n".($day->condition['data'])."\n".'Temp. od '.($day->low['data']).'°C do '.($day->high['data']).'°C');
+			self::putIcon((string)$day->icon['data']);
+			GGapi::putRichText(($day->condition['data'])."\n".'Temp. od '.($day->low['data']).'°C do '.($day->high['data']).'°C');
 			$num = FALSE;
 		}
 		
