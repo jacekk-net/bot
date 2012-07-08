@@ -3,7 +3,6 @@
 	- ./cache
 	- ./data
 	- ./database
-	- ./db
 * sprawdź wymagania skryptu otwierając w przeglądarce test.php
 * zarejestruj się zgodnie z instrukcją:
     http://dev.gg.pl/api/pages/botapi.html#rejestracja

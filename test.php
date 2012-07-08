@@ -49,7 +49,7 @@ testdir('./data/pogoda');
 testdir('./data/rss');
 testdir('./data/tv');
 testdir('./data/tv/cache');
-testdir('./db');
+test('./db', !is_dir('./db') || is_writable('./db'));
 if(is_dir('./database')) {
 	testdir('./database');
 }

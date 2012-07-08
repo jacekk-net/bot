@@ -54,6 +54,9 @@ class BotSession {
 			);
 			
 			$files = glob(BOT_TOPDIR.'/db/*/'.$this->user_struct['user'].'.ggdb');
+			if(!$files) {
+				return;
+			}
 			
 			$this->PDO->beginTransaction();
 			$st = $this->PDO->prepare('INSERT OR REPLACE INTO data (class, name, value) VALUES (?, ?, ?)');
