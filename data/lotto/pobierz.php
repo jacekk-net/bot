@@ -147,7 +147,7 @@ class lotto {
 	function pobierz() {
 		foreach($this->gry as $gra => $data) {
 			echo STAR.'Wyniki gry '.$gra.'...';
-			if($gra == 'multimulti') {
+			if($gra == 'multi-multi') {
 				$wyniki = $this->wyniki($gra, 2);
 				$wynik = $wyniki[0];
 				$skrot = $data[2].substr($wynik['godzina'], 0, 2);
