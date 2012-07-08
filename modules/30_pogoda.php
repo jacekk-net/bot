@@ -147,6 +147,9 @@ class pogoda implements module {
 		$icon = (string)$dane->weather->current_conditions->icon['data'];
 		if(!empty($icon)) {
 			if(!file_exists('./data/pogoda/'.basename($icon))) {
+				if(substr($icon, 0, 1) == '/') {
+					$img = 'http://www.google.com'.$img;
+				}
 				$img = @file_get_contents($icon);
 				if($img) {
 					file_put_contents('./data/pogoda/'.basename($icon), $img);
