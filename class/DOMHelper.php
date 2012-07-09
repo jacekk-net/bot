@@ -1,7 +1,7 @@
 <?php
 class DOMHelper {
 	static function ltrim($node) {
-		while(($node->firstChild instanceof DOMElement) && $node->firstChild->tagName == 'br' && $node->lastChild->getAttribute('auto')=='1') {
+		while(($node->firstChild instanceof DOMElement) && $node->firstChild->tagName == 'br' && $node->firstChild->getAttribute('auto')=='1') {
 			$node->removeChild($node->firstChild);
 		}
 		
