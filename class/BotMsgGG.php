@@ -208,7 +208,7 @@ class BotMsgGG implements BotMsgInterface {
 						DOMHelper::rtrim($saveto);
 						DOMHelper::insertElement('br', $saveto);
 						
-						$tag = DOMHelper::cloneNode($node, $saveto, 'u');
+						$tag = DOMHelper::cloneNode($node, $saveto, 'span');
 						$this->rewrite($node, $tag, FALSE);
 						$saveto->appendChild($tag);
 					break;
@@ -220,7 +220,7 @@ class BotMsgGG implements BotMsgInterface {
 							$node->setAttribute('start', 1);
 						}
 						
-						$tag = DOMHelper::cloneNode($node, $saveto, 'u');
+						$tag = DOMHelper::cloneNode($node, $saveto, 'span');
 						$this->rewrite($node, $tag, FALSE);
 						$saveto->appendChild($tag);
 					break;
