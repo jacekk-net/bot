@@ -22,6 +22,8 @@ test('Wersja PHP >= 5.2', version_compare(PHP_VERSION, '5.2.0', '>='));
 test('magic_quotes_gpc = Off', (get_magic_quotes_gpc() == 0));
 test('allow_url_fopen = On', (ini_get('allow_url_fopen') == 1));
 test('setlocale(pl_PL.UTF8)', setlocale(LC_CTYPE, 'pl_PL.UTF8', 'pl_PL', 'polish', 'plk'));
+test('proc_open(\'aspell\')', ($p=@proc_open('aspell', array(array('pipe', 'r'), array('pipe', 'w'), array('file', '/dev/null', 'w')), $pipe)) !== FALSE);
+@proc_close($p);
 
 echo '<tr> <th class="head" colspan="2">Rozszerzenia PHP</th> </tr>
 ';
