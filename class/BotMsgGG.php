@@ -59,9 +59,6 @@ class BotMsgGG implements BotMsgInterface {
 		else
 		{
 			$image = '';
-			foreach($this->images as $img) {
-				$image .= $img[2];
-			}
 		}
 		
 		$format = $this->getFormat();
@@ -316,10 +313,9 @@ class BotMsgGG implements BotMsgInterface {
 			}
 			
 			$node->setAttribute('name', $name);
-			$this->img .= $name.file_get_contents($src);
+			$this->img = $name.file_get_contents($src);
 			
-			$this->format .= pack('vC', mb_strlen($this->old), self::FORMAT_IMAGE/*|$this->f_type*/)
-			//		//.$this->f_color
+			$this->format .= pack('vC', mb_strlen($this->old), self::FORMAT_IMAGE)
 					.pack('CCVV', 0x09, 0x01, $size, hexdec($crc));
 		}
 	}
