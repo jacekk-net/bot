@@ -39,16 +39,16 @@ class bot_kino_init implements BotModuleInit {
 			return new BotMsg('<b>ustaw</b> <i>[miasto] [nazwa]</i> (alias: <b>u</b>)<br />'."\n"
 				. '   Ustawia domyślne kino/miasto dla komendy kino. W przypadku niepodania argumentów kasuje uprzednio ustawione informacje. Komenda nie sprawdza, czy dane miasto jest obsługiwane - po ustawieniu danych należy wykonać komendę kino.<br />'."\n"
 				. '<br />'."\n"
-				. '<u>Przykład:</u><br />'."\n"
+				. '<u>Przykłady:</u><br />'."\n"
 				. 'ustaw Kraków<br />'."\n"
 				. 'ustaw Kraków Multikino');
 		}
 		else
 		{
 			return new BotMsg('<b>kino</b> <i>miasto nazwa [kiedy]</i> (aliasy: <b>k, repertuar, rep</b>)<br />'."\n"
-				. '   Podaje repertuar kina <i>nazwa</i> w mieście <i>miasto</i> na <i>kiedy</i> (dziś, jutro, pojutrze). W przypadku pominięcia wszystkich argumentów, podawana jest lista obsługiwanych miast. Pominięcie nazwy skutkuje wylistowaniem kin w danym mieście. Domyślnie podawany jest repertuar na dziś. Jeśli brakuje któregoś argumentu, podejmowana jest próba zastąpienia go danymi zapisanymi za pomocą komendy <b>ustaw</b>.<br />'."\n"
+				. '   Podaje repertuar kina <i>nazwa</i> w mieście <i>miasto</i> na <i>kiedy</i> (dziś, jutro, pojutrze). W przypadku wpisania nieznanego miasta, zwracana jest lista obsługiwanych miast. Pominięcie nazwy skutkuje wylistowaniem kin w danym mieście. Domyślnie podawany jest repertuar na dziś. Jeśli brakuje któregoś argumentu, podejmowana jest próba zastąpienia go danymi zapisanymi za pomocą komendy <b>ustaw</b>.<br />'."\n"
 				. '<br />'."\n"
-				. '<u>Przykład:</u><br />'."\n"
+				. '<u>Przykłady:</u><br />'."\n"
 				. 'kino<br />'."\n"
 				. 'kino Kraków<br />'."\n"
 				. 'kino Kraków Multikino');

@@ -99,7 +99,7 @@ class bot_lang_module implements BotModule {
 		return new BotMsg('Wybrana komenda nie istnieje. Prawdopodobnie chodziło ci o jedną z komend językowych, których nazwy zapisywane są <b>bez</b> spacji pomiędzy spacji pomiędzy kodami języków (angpol, a nie: ang pol).<br /><br />'."\n\n"
 		
 		. '<u>Spróbuj:</u><br />'."\n"
-		. $msg->command.ltrim($msg->args));
+		. $msg->command.htmlspecialchars(ltrim($msg->args)));
 	}
 }
 ?>

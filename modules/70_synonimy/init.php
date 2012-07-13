@@ -27,7 +27,7 @@ class bot_synonimy_init implements BotModuleInit {
 			return new BotMsg('<b>synonimy</b> <i>słowo</i> (aliasy: <b>s, syn, synonim</b>)<br />'."\n"
 				. '   Podaje synonimy słowa <i>słowo</i> (w mianowniku liczby pojedynczej).<br />'."\n"
 				. '<br />'."\n"
-				. '<u>Przykład:</u><br />'."\n"
+				. '<u>Przykłady:</u><br />'."\n"
 				. 'synonimy abecadło<br />'."\n"
 				. 'synonimy wyspa');
 		}

@@ -6,7 +6,7 @@ class bot_synonimy_module implements BotModule {
 		if(empty($args)) {
 			return new BotMsg('Funkcja <b>synonimy</b> wymaga argumentu.<br />'
 					. '<br />'."\n"
-					. '<u>Przykład:</u><br />'."\n"
+					. '<u>Przykłady:</u><br />'."\n"
 					. 'synonimy abecadło<br />'."\n"
 					. 'synonimy wyspa');
 		}
@@ -53,7 +53,7 @@ class bot_synonimy_module implements BotModule {
 			$word = strtok($line, ';');
 			
 			if($word != $args) break;
-			$return .= '<br />'."\n".($i++).'. '.rtrim(substr(strstr($line, ';'), 1));
+			$return .= '<br />'."\n".($i++).'. '.htmlspecialchars(rtrim(substr(strstr($line, ';'), 1)));
 		}
 		
 		if(!empty($return)) {

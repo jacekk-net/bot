@@ -6,7 +6,7 @@ class bot_ort_module implements BotModule {
 		if(empty($args)) {
 			return new BotMsg('Funkcja <b>ort</b> wymaga argumentu.<br />'
 					. '<br />'."\n"
-					. '<u>Przykład:</u><br />'."\n"
+					. '<u>Przykłady:</u><br />'."\n"
 					. 'ort grzegżółka<br />'."\n"
 					. 'ort warsawa');
 		}

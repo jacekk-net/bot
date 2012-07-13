@@ -25,7 +25,7 @@ class bot_ort_init implements BotModuleInit {
 			return new BotMsg('<b>ort</b> <i>słowo</i> (alias: <b>o</b>)<br />'."\n"
 				. '   Sprawdza <i>słowo</i> w słowniku ortograficznym. W przypadku jego nie odnalezienia zwraca propozycje poprawnej pisowni.<br />'."\n"
 				. '<br />'."\n"
-				. '<u>Przykład:</u><br />'."\n"
+				. '<u>Przykłady:</u><br />'."\n"
 				. 'ort grzegżółka<br />'."\n"
 				. 'ort warsawa');
 		}
