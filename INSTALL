@@ -29,10 +29,20 @@ class msapi_config {
 	protected $accountKey = 'A123BC9238...ADD';
 
 
+-------
+ UWAGA
+-------
+
+Jeśli dodajesz/usuwasz moduły lub komendy KONIECZNIE usuń wszystkie pliki
+z katalogu ./cache - w przeciwnym wypadku polecenia te mogą powodować błędy
+w działaniu bota!
+
 ------------
  INFORMACJA
 ------------
-
-UWAGA! Jeśli dodajesz/usuwasz moduły lub komendy KONIECZNIE usuń wszystkie
-pliki z katalogu ./cache - w przeciwnym wypadku w/w polecenia mogą powodować
-błędy w działaniu bota!
+W razie problemów zacznij od zmiany
+    error_reporting(E_COMPILE_ERROR|E_PARSE);
+na
+    error_reporting(E_ALL & ~E_NOTICE);
+w pliku
+    ./class/std.php

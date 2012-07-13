@@ -2,42 +2,13 @@
  AKTUALIZACJA Z WERSJI 2.2
 ===========================
 
-* usuń zawartość katalogu ./modules/80_lang
-* nadpisz wszytskie pliki w katalogach ./class i ./modules,
+* usuń wszystkie pliki i katalogi (za wyjątkiem własnych modułów)
+  z katalogu ./modules
+* nadpisz wszystkie pliki w katalogach ./class i ./modules,
   za wyjątkiem ./class/config.php
 * zastąp plik ./data/lotto/pobierz.php
 * zastąp plik ./data/tv/pobierz.php
-* pobierz Azure Datamarket account key ze strony:
-  https://datamarket.azure.com/
-  oraz uzyskaj jakąkolwiek subskrypcję Microsoft Translator pod adresem:
-  https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
-* Account Key wpisz w przewidzianym miejscu w pliku
-  ./modules/80_lang/msapi_config.php
-
-===========================
- AKTUALIZACJA Z WERSJI 2.1
-===========================
-
-* usuń zawartość katalogów ./cache, ./data/tv/cache oraz ./modules/80_lang
-* nadpisz wszytskie pliki w katalogach ./class i ./modules,
-  za wyjątkiem ./class/config.php
-* zastąp plik ./data/lotto/pobierz.php
-* zastąp plik ./data/tv/pobierz.php
-* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
-* pobierz Azure Datamarket account key ze strony:
-  https://datamarket.azure.com/
-  oraz uzyskaj jakąkolwiek subskrypcję Microsoft Translator pod adresem:
-  https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
-* Account Key wpisz w przewidzianym miejscu w pliku
-  ./modules/80_lang/msapi_config.php
-
-==============================
- AKTUALIZACJA Z WERSJI 2.0 RC
-==============================
-
-* usuń pliki ./modules/00_mod_help.php oraz ./modules/80_lang.php
-* zastąp wszystkie pliki oraz katalogi w folderach ./class oraz ./modules
-* usuń wszystkie pliki z katalogu ./cache oraz ./data/tv/cache
+* usuń wszystkie pliki z katalogów ./cache oraz ./data/tv/cache
 * pobierz Account Key ze strony https://datamarket.azure.com/
   (wymaga identyfikatora Windows Live ID) i uzyskaj subskrybcję Microsoft Translator:
   https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
@@ -51,25 +22,31 @@ class msapi_config {
 class msapi_config {
         protected $accountKey = 'A123BC9238...ADD';
 
+==================================
+ AKTUALIZACJA Z WERSJI 2.0 RC/2.1
+==================================
+
+* wykonaj kroki opisane w sekcji "AKTUALIZACJA Z WERSJI 2.2"
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 
 ================================
  AKTUALIZACJA Z WERSJI 2.0 Beta
 ================================
 
-* zastąp wszystkie pliki w folderach ./class oraz ./modules
 * zastąp wszystkie pliki (bez podfolderów!) w ./data,
   a następnie popraw ścieżkę do bota w ./data/update.sh
-* zastąp pliki aliases i pobierz.php w ./data/tv
-* wykonaj polecenia z działu "AKTUALIZACJA Z WERSJI 2.0 RC"
+* zastąp plik aliases w ./data/tv
+* wykonaj polecenia z działu "AKTUALIZACJA Z WERSJI 2.2"
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 
-
+-------
  UWAGA
 -------
 Jeśli dodajesz/usuwasz moduły lub komendy KONIECZNIE usuń wszystkie pliki
 z katalogu ./cache - w przeciwnym wypadku polecenia te mogą powodować błędy
 w działaniu bota!
 
-
+------------
  INFORMACJA
 ------------
 W razie problemów zacznij od zmiany
