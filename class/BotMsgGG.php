@@ -70,7 +70,7 @@ class BotMsgGG implements BotMsgInterface {
 		{
 			if(count($this->images) > 0) {
 				$push = new BotAPIGG();
-				foreach($this->images as $data) {
+				foreach($this->images as $image) {
 					if(!$push->existsImage($image[2])) {
 						$push->putImage($image[3]);
 					}
