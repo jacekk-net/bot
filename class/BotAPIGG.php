@@ -6,7 +6,7 @@ class BotAPIGGHTTPException extends Exception {
 	function __construct($msg, $httpcode, $content) {
 		$this->httpcode = $httpcode;
 		$this->content = $content;
-		parent::__construct($msg);
+		parent::__construct($msg.' Błąd '.$httpcode);
 	}
 	
 	function __get($name) {
