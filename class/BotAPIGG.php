@@ -210,7 +210,10 @@ class BotAPIGG extends config {
 		$token = $this->getToken();
 		
 		$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/putImage/'.$auth['numer'], array(
-			CURLOPT_HTTPHEADER => array('Content-Type: image/x-any'),
+			CURLOPT_HTTPHEADER => array(
+				'Content-Type: image/x-any',
+				'Expect: ',
+			),
 			CURLOPT_POST => TRUE,
 			CURLOPT_POSTFIELDS => file_get_contents($path),
 		));
