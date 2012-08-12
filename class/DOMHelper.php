@@ -6,7 +6,7 @@ class DOMHelper {
 		}
 		
 		if($node->firstChild instanceof DOMElement) {
-			self::ltrim($node->firstChid);
+			self::ltrim($node->firstChild);
 		}
 	}
 	
