@@ -106,6 +106,8 @@ class pogoda implements module {
 	}
 	
 	static function cmd_pogoda($name, $arg) {
+		$forced = FALSE;
+		
 		if(empty($arg)) {
 			$arg = database::get($_GET['from'], 'pogoda', 'miasto');
 			if(empty($arg)) {
