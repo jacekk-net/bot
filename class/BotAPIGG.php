@@ -189,7 +189,7 @@ class BotAPIGG extends config {
 		return $tok;
 	}
 	
-	function existsImage() {
+	function existsImage($hash) {
 		$auth = $this->APIs['Gadu-Gadu'];
 		$token = $this->getToken();
 		
