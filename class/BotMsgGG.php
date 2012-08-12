@@ -21,10 +21,6 @@ class BotMsgGG implements BotMsgInterface {
 	const FORMAT_COLOR =	0x08;
 	const FORMAT_IMAGE =	0x80;
 	
-	const COLOR_RED =	0x00010000;
-	const COLOR_GREEN =	0x00000100;
-	const COLOR_BLUE =	0x00000001;
-	
 	/**
 	 * @param BotMsg $msg Wiadomość do przekonwertowania
 	 */
@@ -337,6 +333,7 @@ class BotMsgGG implements BotMsgInterface {
 			
 			$this->format .= pack('vC', mb_strlen($this->old), self::FORMAT_IMAGE)
 					.pack('CCVV', 0x09, 0x01, $size, hexdec($crc));
+			$this->f_old = '';
 		}
 	}
 	
