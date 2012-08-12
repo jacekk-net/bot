@@ -167,7 +167,7 @@ class pogoda implements module {
 		self::putIcon((string)$dane->weather->current_conditions->icon['data']);
 		
 		$condition = (string)$dane->weather->current_conditions->condition['data'];
-		GGapi::putRichText($txt.($condition ? $condition."\n" : '').'Temp.: '.($dane->weather->current_conditions->temp_c['data']).'°C'."\n".($dane->weather->current_conditions->humidity['data'])."\n".($dane->weather->current_conditions->wind_condition['data']));
+		GGapi::putRichText(($condition ? $condition."\n" : '').'Temp.: '.($dane->weather->current_conditions->temp_c['data']).'°C'."\n".($dane->weather->current_conditions->humidity['data'])."\n".($dane->weather->current_conditions->wind_condition['data']));
 		
 		$num = TRUE;
 		foreach($dane->weather->forecast_conditions as $day) {
