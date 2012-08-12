@@ -196,7 +196,7 @@ class BotAPIGG extends config {
 		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/setUrl/'.$auth['numer'], array(
 			CURLOPT_POST => TRUE,
 			CURLOPT_POSTFIELDS => http_build_query(array('hash' => $hash), '', '&'),
-		), TRUE, FALSE);
+		));
 		
 		if( (string)$tok->status != '0') {
 			return FALSE;
@@ -218,7 +218,7 @@ class BotAPIGG extends config {
 			CURLOPT_HTTPHEADER => array('Content-Type: image/x-any'),
 			CURLOPT_POST => TRUE,
 			CURLOPT_INFILE => $fp,
-		), TRUE, FALSE);
+		));
 		
 		if( (string)$tok->status != '0') {
 			throw new BotAPIGGReplyException('Przesyłanie obrazka do botmastera nie powiodło się.', $tok);
