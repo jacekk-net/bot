@@ -60,7 +60,7 @@ code, pre {
 |  |\/|  | |  |  |  | |  |   | | |  |  |  | |   /    \    /
 |  |  |  | |  |__|  | |  |__/  | |  |__|  | |  |____  |  |
 |__|  |__|  \______/  |_______/   \______/  |_______| |__|
-Poradnik v2.0                           Tworzenie i edycja
+Poradnik v2.1                           Tworzenie i edycja
 </pre>
 
 <h3 id="tableOfContent">Spis treści</h3>
@@ -329,6 +329,27 @@ return <cite>'bot_przyklad_init'</cite>;
 
 <pre>
 <code><var>$msg<b>-&gt;</b>args</var></code>
+</pre>
+
+<h4 id="classBotMessage_propertyImages">Pole $images</h4>
+
+<p>Tablica obrazków (obiektów klasy BotImage) przesłanych do bota przez użytkownika.</p>
+
+<pre>
+<code><b>if(<a href="http://php.net/assert"><var>count</var></a>(<var>$msg</var>-&gt;<var>images</var>) &gt; <var>0</var>) {</b>
+    <i>// Do bota zostały przesłane obrazki</i>
+    
+    <i>// Pierwszy obrazek</i>
+    <var>$img <b>=</b> $msg<b>-&gt;</b>images</var><b>[<var>0</var>];</b>
+    
+    <i>// Obrazek w formie gotowej do obróbki za pomocą biblioteki GD</i>
+    <var>$gd <b>=</b> $img<b>-&gt;</b>getImage</var><b>();</b>
+    <a href="http://php.net/imagestring"><var>imagestring</var></a><b>(</b><var>$gd<b>,</b> 2<b>,</b> 0<b>,</b> 0</var><b>, <cite>'To jest tekst'</cite>,</b> <a href="http://php.net/imagecolorallocate"><var>imagecolorallocate</var></a><b>(<var>$gd<b>,</b> 255<b>,</b> 255<b>,</b> 255</var>));</b>
+    
+    <i>// Obrazek jako ciąg bajtów gotowych do zapisu:</i>
+    <var>$data <b>=</b> $img<b>-&gt;</b>getImageData</var><b>();</b>
+    <a href="http://php.net/file_put_contents"><var>file_put_contents</var></a><b>(<cite>'/tmp/obrazek.jpg'</cite>, <var>$data</var>);</b>
+<b>}</b></code>
 </pre>
 
 <h3 id="interfaceBotModule">Komunikacja z użytkownikiem - interfejs BotModule</h3>
