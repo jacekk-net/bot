@@ -132,10 +132,6 @@ class BotMsgGG implements BotMsgInterface {
 		echo $this->getGG();
 	}
 	
-	private function rewriteOne($node, $saveto) {
-		
-	}
-	
 	private function rewrite($dom, $saveto, $top = TRUE) {
 		if(!($dom instanceof DOMElement)) {
 			throw new BotMsgException('Nieznany element DOM: '.get_class($dom));
