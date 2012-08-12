@@ -181,7 +181,7 @@ class BotAPIGG extends config {
 		$auth = $this->APIs['Gadu-Gadu'];
 		$token = $this->getToken();
 		
-		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/getImage/'.$auth['numer'], array(
+		$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/getImage/'.$auth['numer'], array(
 			CURLOPT_POST => TRUE,
 			CURLOPT_POSTFIELDS => http_build_query(array('hash' => $hash), '', '&'),
 		), TRUE, FALSE);
@@ -193,7 +193,7 @@ class BotAPIGG extends config {
 		$auth = $this->APIs['Gadu-Gadu'];
 		$token = $this->getToken();
 		
-		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/existsImage/'.$auth['numer'], array(
+		$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/existsImage/'.$auth['numer'], array(
 			CURLOPT_POST => TRUE,
 			CURLOPT_POSTFIELDS => http_build_query(array('hash' => $hash), '', '&'),
 		));
@@ -214,7 +214,7 @@ class BotAPIGG extends config {
 		$auth = $this->APIs['Gadu-Gadu'];
 		$token = $this->getToken();
 		
-		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/putImage/'.$auth['numer'], array(
+		$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/putImage/'.$auth['numer'], array(
 			CURLOPT_HTTPHEADER => array('Content-Type: image/x-any'),
 			CURLOPT_POST => TRUE,
 			CURLOPT_INFILE => $fp,
