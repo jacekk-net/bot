@@ -123,7 +123,7 @@ class BotMsgGG implements BotMsgInterface {
 	 */
 	function sendPullResponse() {
 		header('Content-Type: application/x-gadu-gadu; charset=utf-8');
-		echo $this;
+		echo $this->getGG();
 	}
 	
 	private function rewriteOne($node, $saveto) {
