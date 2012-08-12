@@ -115,7 +115,13 @@ class BotMsgGG implements BotMsgInterface {
 	 * @return string
 	 */
 	function getFormat() {
-		return pack('Cv', 0x02, strlen($this->format)).$this->format;
+		if($this->format == '') {
+			return '';
+		}
+		else
+		{
+			return pack('Cv', 0x02, strlen($this->format)).$this->format;
+		}
 	}
 	
 	/**

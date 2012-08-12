@@ -206,18 +206,13 @@ class BotAPIGG extends config {
 	}
 	
 	function putImage($path) {
-		$fp = fopen($path, 'r');
-		if(!$fp) {
-			return FALSE;
-		}
-		
 		$auth = $this->APIs['Gadu-Gadu'];
 		$token = $this->getToken();
 		
 		$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/putImage/'.$auth['numer'], array(
 			CURLOPT_HTTPHEADER => array('Content-Type: image/x-any'),
 			CURLOPT_POST => TRUE,
-			CURLOPT_INFILE => $fp,
+			CURLOPT_POSTFIELDS => file_get_contents($path),
 		));
 		
 		if( (string)$tok->status != '0') {
