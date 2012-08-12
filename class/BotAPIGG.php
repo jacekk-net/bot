@@ -44,7 +44,7 @@ class BotAPIGGReplyException extends Exception {
 }
 
 class BotAPIGG extends config {
-	private $token;
+	private static $token;
 	
 	const STATUS_DOSTEPNY = 2;
 	const STATUS_DOSTEPNY_DESC = 4;
