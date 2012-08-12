@@ -6,7 +6,6 @@ class BotMsgGG implements BotMsgInterface {
 	private $parser;
 	private $html = '';
 	private $old = '';
-	private $img = '';
 	private $format = '';
 	
 	private $images = array();
@@ -49,12 +48,25 @@ class BotMsgGG implements BotMsgInterface {
 	
 	/**
 	 * Zwraca wiadomość zgodną z BotAPI Gadu-Gadu, którą można przekazać bezpośrednio do BotMastera
-	 * @param bool $img Czy dołączać obrazki?
+	 * @param NULL|bool $img Czy dołączać obrazki?
 	 * @return string
 	 */
-	function getGG($image = TRUE) {
-		if($image) {
-			$image = $this->img;
+	function getGG($image = NULL) {
+		if($image === FALSE) {
+			$image = '';
+		}
+		elseif($image === TRUE) {
+			$last = array_pop($this->images);
+			if(count($this->images) > 0) {
+				$push = new BotAPIGG();
+				foreach($this->images as $data) {
+					$push->putImage($image[3]);
+				}
+				
+				$image = $last;
+			}
+			
+			$image = $last[2].file_get_contents($last[3]);
 		}
 		else
 		{
@@ -309,11 +321,10 @@ class BotMsgGG implements BotMsgInterface {
 				$crc = hash_file('crc32b', $src);
 				$name = sprintf('%08s%08x', $crc, $size);
 				
-				$this->images[$src] = array($crc, $size, $name);
+				$this->images[$src] = array($crc, $size, $name, $src);
 			}
 			
 			$node->setAttribute('name', $name);
-			$this->img = $name.file_get_contents($src);
 			
 			$this->format .= pack('vC', mb_strlen($this->old), self::FORMAT_IMAGE)
 					.pack('CCVV', 0x09, 0x01, $size, hexdec($crc));

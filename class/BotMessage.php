@@ -31,6 +31,12 @@ class BotMessage {
 	protected $text;
 	
 	/**
+	 * Tablica obrazków (zobacz klasę BotImage) przesłanych do bota przez użytkownika.
+	 * @var array
+	 */
+	protected $images = array();
+	
+	/**
 	 * Komenda, tylko znaki ASCII, małe litery
 	 * @var string
 	 */

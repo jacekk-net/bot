@@ -71,7 +71,7 @@ class BotAPIGG extends config {
 	const STATUS_INVISIBLE = 20;
 	const STATUS_INVISIBLE_DESC = 22;
 	
-	private function httpQuery($address, $useToken = TRUE, $curlopts = array()) {
+	private function httpQuery($address, $curlopts = array(), $useToken = TRUE, $parseXML = TRUE) {
 		if(!is_array($curlopts)) {
 			$curlopts = array();
 		}
@@ -97,21 +97,29 @@ class BotAPIGG extends config {
 		$tok2 = $tok = curl_exec($dane);
 		$info = curl_getinfo($dane);
 		
-		try {
-			libxml_use_internal_errors(TRUE);
-			$tok = new SimpleXMLElement($tok);
+		if($parseXML) {
+			try {
+				libxml_use_internal_errors(TRUE);
+				$tok = new SimpleXMLElement($tok);
+			}
+			catch(Exception $e) {
+				throw new BotAPIGGXMLException('Otrzymano błędny XML od botmastera.', $tok2);
+			}
+			
+			if(!$tok) {
+				if($info['http_code'] != 200) {
+					throw new BotAPIGGHTTPException('Nie udało się wykonać zapytania HTTP.', $info['http_code'], $tok2);
+				}
+				else
+				{
+					throw new BotAPIGGXMLException('Otrzymano błędny XML od botmastera.', $tok2);
+				}
+			}
 		}
-		catch(Exception $e) {
-			throw new BotAPIGGXMLException('Otrzymano błędny XML od botmastera.', $tok2);
-		}
-		
-		if(!$tok) {
+		else
+		{
 			if($info['http_code'] != 200) {
 				throw new BotAPIGGHTTPException('Nie udało się wykonać zapytania HTTP.', $info['http_code'], $tok2);
-			}
-			else
-			{
-				throw new BotAPIGGXMLException('Otrzymano błędny XML od botmastera.', $tok2);
 			}
 		}
 		
@@ -119,32 +127,34 @@ class BotAPIGG extends config {
 	}
 	
 	function getToken($force = FALSE) {
-		if($force || !$this->token) {
+		if($force || self::$token === NULL) {
 			$auth = $this->APIs['Gadu-Gadu'];
 			
-			$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/getToken/'.$auth['numer'], FALSE, array(
+			$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/getToken/'.$auth['numer'],  array(
 				CURLOPT_USERPWD => $auth['login'].':'.$auth['haslo'],
 				CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-			));
+			), FALSE);
 			
 			if($tok->errorMsg) {
 				throw new BotAPIGGReplyException('Pobieranie tokena nie powiodło się.', $tok);
 			}
 			
-			$this->token = array('token' => (string)$tok->token, 'host' => (string)$tok->server, 'port' => (int)$tok->port);
+			self::$token = array('token' => (string)$tok->token, 'host' => (string)$tok->server, 'port' => (int)$tok->port);
 		}
 		
-		return $this->token;
+		return self::$token;
 	}
 	
 	function setStatus($status, $desc = '') {
 		$auth = $this->APIs['Gadu-Gadu'];
 		$token = $this->getToken();
 		
-		$tok = $this->httpQuery('https://'.$token['host'].'/setStatus/'.$auth['numer'], FALSE, array(
-			CURLOPT_HTTPHEADER => array('Content-Type: application/x-www-form-urlencoded'),
+		$tok = $this->httpQuery('https://'.$token['host'].'/setStatus/'.$auth['numer'], array(
 			CURLOPT_POST => TRUE,
-			CURLOPT_POSTFIELDS => 'token='.urlencode($token['token']).'&status='.urlencode($status).'&desc='.urlencode($desc),
+			CURLOPT_POSTFIELDS => array(
+				'status' => $status,
+				'desc' => $desc,
+			),
 		));
 		
 		if( (string)$tok->status != '0') {
@@ -155,7 +165,7 @@ class BotAPIGG extends config {
 	function setUrl($url) {
 		$auth = $this->APIs['Gadu-Gadu'];
 		
-		$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/setUrl/'.$auth['numer'], TRUE, array(
+		$tok = $this->httpQuery('https://botapi.gadu-gadu.pl/botmaster/setUrl/'.$auth['numer'], array(
 			CURLOPT_POST => TRUE,
 			CURLOPT_POSTFIELDS => $url,
 		));
@@ -167,6 +177,56 @@ class BotAPIGG extends config {
 		return $tok;
 	}
 	
+	function getImage($hash) {
+		$auth = $this->APIs['Gadu-Gadu'];
+		$token = $this->getToken();
+		
+		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/setUrl/'.$auth['numer'], array(
+			CURLOPT_POST => TRUE,
+			CURLOPT_POSTFIELDS => array('hash' => $hash),
+		), TRUE, FALSE);
+		
+		return $tok;
+	}
+	
+	function existsImage() {
+		$auth = $this->APIs['Gadu-Gadu'];
+		$token = $this->getToken();
+		
+		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/setUrl/'.$auth['numer'], array(
+			CURLOPT_POST => TRUE,
+			CURLOPT_POSTFIELDS => array('hash' => $hash),
+		), TRUE, FALSE);
+		
+		if( (string)$tok->status != '0') {
+			return FALSE;
+		}
+		
+		return TRUE;
+	}
+	
+	function putImage($path) {
+		$fp = fopen($path, 'r');
+		if(!$fp) {
+			return FALSE;
+		}
+		
+		$auth = $this->APIs['Gadu-Gadu'];
+		$token = $this->getToken();
+		
+		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/setUrl/'.$auth['numer'], array(
+			CURLOPT_HTTPHEADER => array('Content-Type: image/x-any'),
+			CURLOPT_POST => TRUE,
+			CURLOPT_INFILE => $fp,
+		), TRUE, FALSE);
+		
+		if( (string)$tok->status != '0') {
+			throw new BotAPIGGReplyException('Przesyłanie obrazka do botmastera nie powiodło się.', $tok);
+		}
+		
+		return (string)$tok->hash;
+	}
+	
 	/**
 	 * Wysyła wiadomość do podanych użytkowników
 	 * @param array $toURL Lista adresatów wiadomości w postaci: array('Gadu-Gadu://NUMER@gadu-gadu.pl', ...)
@@ -174,7 +234,6 @@ class BotAPIGG extends config {
 	 * @param array $params Parametry przekazywane funkcji. Aktualnie dostępne:
 	 * array( 'SendToOffline' => (bool)TRUE/FALSE )
 	 */
-	
 	function sendMessage($toURL, BotMsg $msg, $params = array()) {
 		$to = array();
 		foreach($toURL as $url) {
@@ -183,7 +242,7 @@ class BotAPIGG extends config {
 				continue;
 			}
 			
-			if($url['user']=='' || !ctype_digit($url['user'])) {
+			if($url['user'] == '' || !ctype_digit($url['user'])) {
 				throw new Exception('Nieznany użytkownik sieci Gadu-Gadu, któremu należy dostarczyć wiadomość.');
 			}
 			
@@ -208,17 +267,23 @@ class BotAPIGG extends config {
 		while(!empty($to)) {
 			$to_part = implode(',', array_splice($to, -5000));
 			
-			$tok = $this->httpQuery('https://'.$token['host'].'/sendMessage/'.$auth['numer'], FALSE, array(
+			$tok = $this->httpQuery('https://'.$token['host'].'/sendMessage/'.$auth['numer'], array(
 				CURLOPT_HTTPHEADER => $headers,
 				CURLOPT_POST => TRUE,
-				CURLOPT_POSTFIELDS => 'token='.urlencode($token['token']).'&to='.urlencode($to_part).'&msg='.urlencode($msg->getGG(FALSE)),
+				CURLOPT_POSTFIELDS => array(
+					'to' => $to_part,
+					'msg' => $msg->getGG(FALSE),
+				),
 			));
 			
 			if((string)$tok->status == '18') {
 				$tok = $this->httpQuery('https://'.$token['host'].'/sendMessage/'.$auth['numer'], FALSE, array(
 					CURLOPT_HTTPHEADER => $headers,
 					CURLOPT_POST => TRUE,
-					CURLOPT_POSTFIELDS => 'token='.urlencode($token['token']).'&to='.urlencode($to_part).'&msg='.urlencode($msg->getGG(FALSE)),
+					CURLOPT_POSTFIELDS => array(
+						'to' => $to_part,
+						'msg' => $msg->getGG(TRUE),
+					),
 				));
 			}
 			
