@@ -151,10 +151,10 @@ class BotAPIGG extends config {
 		
 		$tok = $this->httpQuery('https://'.$token['host'].'/setStatus/'.$auth['numer'], array(
 			CURLOPT_POST => TRUE,
-			CURLOPT_POSTFIELDS => array(
+			CURLOPT_POSTFIELDS => http_build_query(array(
 				'status' => $status,
 				'desc' => $desc,
-			),
+			), '', '&'),
 		));
 		
 		if( (string)$tok->status != '0') {
@@ -183,7 +183,7 @@ class BotAPIGG extends config {
 		
 		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/setUrl/'.$auth['numer'], array(
 			CURLOPT_POST => TRUE,
-			CURLOPT_POSTFIELDS => array('hash' => $hash),
+			CURLOPT_POSTFIELDS => http_build_query(array('hash' => $hash), '', '&'),
 		), TRUE, FALSE);
 		
 		return $tok;
@@ -195,7 +195,7 @@ class BotAPIGG extends config {
 		
 		$tok = $this->httpQuery('https://'.$token['host'].'/botmaster/setUrl/'.$auth['numer'], array(
 			CURLOPT_POST => TRUE,
-			CURLOPT_POSTFIELDS => array('hash' => $hash),
+			CURLOPT_POSTFIELDS => http_build_query(array('hash' => $hash), '', '&'),
 		), TRUE, FALSE);
 		
 		if( (string)$tok->status != '0') {
