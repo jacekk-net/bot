@@ -5,12 +5,12 @@ class bot_czesc_module implements BotModule {
 		
 		$dozwolone = array('przyjacielu', 'kolego', 'bocie', ':)', '.', ':d', ':D');
 		if(!in_array($arg, $dozwolone) && !empty($arg)) {
-			return new BotMsg('Funkcja <b>czesc</b> nie przyjmuje argumentów!');
+			return new BotMsg('Funkcja <b>czesc</b> nie przyjmuje argumentÃ³w!');
 		}
 		
 		return new BotMsg('<p>Witam!</p>'."\n"
-			. '<p>Jestem prostym botem Gadu-Gadu, który poda Ci kursy walut (wpisz: <b>kursy</b>), sprawdzi dane s³owo w s³owniku ortograficznym (wpisz: <b>ort s³owo</b>) lub przywita siê (tak jak teraz)!</p>'."\n"
-			. '<p>Informacje o wszystkich dostêpnych poleceniach otrzymasz po wys³aniu do mnie s³owa <b>pomoc</b>.</p>');
+			. '<p>Jestem prostym botem Gadu-Gadu, ktÃ³ry poda Ci kursy walut (wpisz: <b>kursy</b>), sprawdzi dane sÅ‚owo w sÅ‚owniku ortograficznym (wpisz: <b>ort sÅ‚owo</b>) lub przywita siÄ™ (tak jak teraz)!</p>'."\n"
+			. '<p>Informacje o wszystkich dostÄ™pnych poleceniach otrzymasz po wysÅ‚aniu do mnie sÅ‚owa <b>pomoc</b>.</p>');
 	}
 	
 	function hello($msg, $params) {
@@ -27,7 +27,7 @@ class bot_czesc_module implements BotModule {
 	}
 	
 	function zachcianki($msg, $params) {
-		$txt = array('Ech... Czego siê tym ludziom zachciewa...', 'Znajd¼ sobie kogo¶.', 'CO?!');
+		$txt = array('Ech... Czego siÄ™ tym ludziom zachciewa...', 'ZnajdÅº sobie kogoÅ›.', 'CO?!');
 		return new BotMsg($txt[array_rand($txt)]);
 	}
 	
@@ -36,21 +36,21 @@ class bot_czesc_module implements BotModule {
 		
 		$dozwolone = array('cie', 'ci', 'cie przyjacielu', 'cie kolego', 'ci bocie', 'cie bocie', 'cie :)', 'przyjacielu', 'kolego', 'bocie', '.', ':)', ':d', ':D');
 		if(!in_array($arg, $dozwolone) && !empty($arg)) {
-			return new BotMsg('Funkcja <b>kocham</b> nie przyjmuje epitetów!');
+			return new BotMsg('Funkcja <b>kocham</b> nie przyjmuje epitetÃ³w!');
 		}
 		
-		return new BotMsg('Mi³o mi!');
+		return new BotMsg('MiÅ‚o mi!');
 	}
 	
 	function odp($msg, $params) {
 		$txt = array(
 			'lol' => array(
-				'Co w tym takiego ¶miesznego? :P',
-				'Nie widzê w tym nic, co mog³oby sprawiæ, ¿e tarzasz siê po pod³odze ;)',
+				'Co w tym takiego Å›miesznego? :P',
+				'Nie widzÄ™ w tym nic, co mogÅ‚oby sprawiÄ‡, Å¼e tarzasz siÄ™ po podÅ‚odze ;)',
 				'LOL'
 			),
 			'do' => array(
-				'Do... Du ³ot?!',
+				'Do... Du Å‚ot?!',
 			),
 		);
 		
