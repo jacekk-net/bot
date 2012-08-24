@@ -1,5 +1,5 @@
 <?php
-class bot_wersja_module implements BotModule {
+class bot_czesc_module implements BotModule {
 	function czesc($msg, $params) {
 		$arg = funcs::utfToAscii($msg->args);
 		
