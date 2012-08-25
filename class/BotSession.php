@@ -7,7 +7,7 @@ class BotSession {
 	
 	/**
 	 * Nazwa modułu, którego zmienne klasa przetwarza
-	 * @var string max. 40 znak�w
+	 * @var string max. 40 znaków
 	 */
 	var $class;
 	
@@ -25,6 +25,10 @@ class BotSession {
 	}
 	
 	private function init() {
+		if(strlen($this->class) == 0) {
+			throw new Exception('Przed użyciem $msg->session należy ustawić nazwę modułu za pomocą metody setClass - patrz "Poradnik tworzenia modułów", dział "Klasa BotMessage", rozdział "Pole $session".');
+		}
+		
 		if($this->PDO) {
 			return NULL;
 		}
@@ -143,6 +147,10 @@ class BotSession {
 		}
 		
 		return $return;
+	}
+	
+	function setClass($class) {
+		$this->class = $class;
 	}
 	
 	function truncate() {

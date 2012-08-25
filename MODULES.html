@@ -264,10 +264,16 @@ return <cite>'bot_przyklad_init'</cite>;
 
 <p>Odpowiednik klasy database z poprzedniej wersji bota. Aktualnie instancja klasy BotSession, umożliająca przechowywanie danych przypisanych do użytkownika, m.in. miasta, nazwy kina i tym podobnych.</p>
 
+<p class="warning">Przed użyciem sesji należy ustawić nazwę klasy, dla której zmienne będą przetwarzane. Jest to odpowiednik drugiego argumentu przekazywanego do metody database::get() z pierwszych wersji bota.</p>
+
 <p>Przykład użycia:</p>
 
 <pre>
-<code><i>// Ustawienie pojedynczej wartości</i>
+<code>
+<i>// Ustawienie nazwy modułu. WYMAGANE!</i>
+<var>$msg<b>-&gt;</b>session<b>-&gt;</b>setClass</var><b>(<cite>'przyklad'</cite>);</b>
+
+<i>// Ustawienie pojedynczej wartości</i>
 <var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var> <b>= <cite>'To jest test'</cite>;</b>
 <a href="http://php.net/assert"><b>assert</b></a><b>(</b><var>$msg<b>-&gt;</b>session<b>-&gt;</b>zmienna</var> <b>=== <cite>'To jest test'</cite>);</b>
 
