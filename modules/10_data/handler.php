@@ -73,7 +73,7 @@ class bot_data_module implements BotModule {
 	}
 	
 	function imieniny($msg, $params) {
-		$arg = funcs::utfToAscii($arg);
+		$arg = funcs::utfToAscii($msg->args);
 		
 		if(empty($arg)) {
 			return new BotMsg('Nie podano imienia!<br />'."\n"
