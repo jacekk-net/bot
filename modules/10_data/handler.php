@@ -2,11 +2,11 @@
 class bot_data_module implements BotModule {
 	static $dni = array(
 		'niedziela',
-		'poniedzia≥ek',
+		'poniedzia≈Çek',
 		'wtorek',
-		'∂roda',
+		'≈õroda',
 		'czwartek',
-		'pi±tek',
+		'piƒÖtek',
 		'sobota',
 	);
 	static $miesiace = array(
@@ -18,8 +18,8 @@ class bot_data_module implements BotModule {
 		'czerwca',
 		'lipca',
 		'sierpnia',
-		'wrze∂nia',
-		'paºdziernika',
+		'wrze≈õnia',
+		'pa≈∫dziernika',
 		'listopada',
 		'grudnia',
 	);
@@ -34,9 +34,9 @@ class bot_data_module implements BotModule {
 		{
 			$data = calendar::parse_date($arg);
 			if(!$data) {
-				return new BotMsg('Podana data nie zosta≥a rozpoznana<br />'."\n"
+				return new BotMsg('Podana data nie zosta≈Ça rozpoznana<br />'."\n"
 					. '<br />'."\n"
-					. '<u>Przyk≥ady:</u><br />'."\n"
+					. '<u>Przyk≈Çady:</u><br />'."\n"
 					. 'data<br />'."\n"
 					. 'data pojutrze<br />'."\n"
 					. 'data 1.01.2009');
@@ -44,16 +44,16 @@ class bot_data_module implements BotModule {
 		}
 		
 		if(date('d.m.Y') == date('d.m.Y', $data)) {
-			$txt = 'Dzi∂ jest ';
+			$txt = 'Dzi≈õ jest ';
 		}
 		else
 		{
-			$txt = 'Wybrany dzieÒ to ';
+			$txt = 'Wybrany dzie≈Ñ to ';
 		}
 		
 		include('./data/data/data.php');
 		
-		$txt .= self::$dni[date('w', $data)].', '.date('j', $data).' '.self::$miesiace[date('n', $data)].' '.date('Y').' r., '.(date('z', $data)+1).' dzieÒ roku.<br />'."\n"
+		$txt .= self::$dni[date('w', $data)].', '.date('j', $data).' '.self::$miesiace[date('n', $data)].' '.date('Y').' r., '.(date('z', $data)+1).' dzie≈Ñ roku.<br />'."\n"
 			. '<br />'."\n";
 		
 		$msg->session->setClass('pogoda');
@@ -66,8 +66,8 @@ class bot_data_module implements BotModule {
 		}
 		
 		$txt .= 'Imieniny: '.$imieniny[date('n', $data)][date('j', $data)].'<br />'."\n"
-			. 'WschÛd S≥oÒca: '.date_sunrise($data, SUNFUNCS_RET_STRING, $geo['lat'], $geo['lon'], 90.58, 1+date('I')).'<br />'."\n"
-			. 'ZachÛd S≥oÒca: '.date_sunset($data, SUNFUNCS_RET_STRING, $geo['lat'], $geo['lon'], 90.58, 1+date('I'));
+			. 'Wsch√≥d S≈Ço≈Ñca: '.date_sunrise($data, SUNFUNCS_RET_STRING, $geo['lat'], $geo['lon'], 90.58, 1+date('I')).'<br />'."\n"
+			. 'Zach√≥d S≈Ço≈Ñca: '.date_sunset($data, SUNFUNCS_RET_STRING, $geo['lat'], $geo['lon'], 90.58, 1+date('I'));
 		
 		return new BotMsg($txt);
 	}
@@ -78,7 +78,7 @@ class bot_data_module implements BotModule {
 		if(empty($arg)) {
 			return new BotMsg('Nie podano imienia!<br />'."\n"
 				. '<br />'."\n"
-				. '<u>Przyk≥ady:</u><br />'."\n"
+				. '<u>Przyk≈Çady:</u><br />'."\n"
 				. 'imieniny Adama<br />'."\n"
 				. 'imieniny Ewy');
 		}
@@ -86,9 +86,9 @@ class bot_data_module implements BotModule {
 		include('./data/data/imieniny.php');
 		
 		if(!isset($imiona[$arg])) {
-			return new BotMsg('Nie znaleziono imienia w bazie. PamiÍtaj, by podaÊ imiÍ w dope≥niaczu liczby pojedynczej!<br />'."\n"
+			return new BotMsg('Nie znaleziono imienia w bazie. Pamiƒôtaj, by podaƒá imiƒô w dope≈Çniaczu liczby pojedynczej!<br />'."\n"
 				. '<br />'."\n"
-				. '<u>Przyk≥ady:</u><br />'."\n"
+				. '<u>Przyk≈Çady:</u><br />'."\n"
 				. 'imieniny Adama<br />'."\n"
 				. 'imieniny Ewy');
 		}
@@ -99,7 +99,7 @@ class bot_data_module implements BotModule {
 			$txt[] = $dzien[0].' '.self::$miesiace[$dzien[1]];
 		}
 		
-		return new BotMsg('Imieniny '.ucfirst($arg).' s± '.implode(', ', $txt));
+		return new BotMsg('Imieniny '.ucfirst($arg).' sƒÖ '.implode(', ', $txt));
 	}
 }
 ?>
