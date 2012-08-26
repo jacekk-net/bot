@@ -9,10 +9,10 @@ class BotSession {
 	 * Nazwa modułu, którego zmienne klasa przetwarza
 	 * @var string max. 40 znaków
 	 */
-	var $class;
+	protected $class = '';
+	protected $class_empty = TRUE;
 	
 	private $user;
-	
 	
 	/**
 	 * Inicjuje klasę w zależności od użytkownika
@@ -21,11 +21,11 @@ class BotSession {
 		$this->user = sha1($user);
 		$this->user_struct = parse_url($user);
 		
-		$this->class = '';
+		$this->class_empty = FALSE;
 	}
 	
 	private function init() {
-		if(strlen($this->class) == 0) {
+		if(strlen($this->class) == 0 && !$this->class_empty) {
 			throw new Exception('Przed użyciem $msg->session należy ustawić nazwę modułu za pomocą metody setClass - patrz "Poradnik tworzenia modułów", dział "Klasa BotMessage", rozdział "Pole $session".');
 		}
 		
