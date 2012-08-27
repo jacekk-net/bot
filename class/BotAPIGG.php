@@ -233,9 +233,21 @@ class BotAPIGG extends config {
 	 * array( 'SendToOffline' => (bool)TRUE/FALSE )
 	 */
 	function sendMessage($toURL, BotMsg $msg, $params = array()) {
+		if(is_string($toURL)) {
+			$toURL = array($toURL);
+		}
+		
+		if(!is_array($toURL)) {
+			throw new Exception('Lista adresatów przekazywanych do funkcji BotAPIGG::sendMessage() winna być tablicą.');
+		}
+		
 		$to = array();
 		foreach($toURL as $url) {
 			$url = parse_url($url);
+			if($url === FALSE) {
+				continue;
+			}
+			
 			if($url['scheme'] != 'Gadu-Gadu') {
 				continue;
 			}
@@ -274,8 +286,9 @@ class BotAPIGG extends config {
 				),
 			));
 			
+			// Brak obrazka w cache BotMastera...
 			if((string)$tok->status == '18') {
-				$tok = $this->httpQuery('https://'.$token['host'].'/sendMessage/'.$auth['numer'], FALSE, array(
+				$tok = $this->httpQuery('https://'.$token['host'].'/sendMessage/'.$auth['numer'], array(
 					CURLOPT_HTTPHEADER => $headers,
 					CURLOPT_POST => TRUE,
 					CURLOPT_POSTFIELDS => array(
@@ -291,6 +304,50 @@ class BotAPIGG extends config {
 		}
 		
 		return TRUE;
+	}
+	
+	/**
+	 * Pobiera dane użytkownika z katalogu publicznego.
+	 * @param string|BotUser Numer użytkownika
+	 * @return array|false Tablica z danymi.
+	 */
+	function getPublicData($number) {
+		if($number instanceof BotUser) {
+			if($number->network != 'gadu-gadu.pl') {
+				return FALSE;
+			}
+			
+			$number = $number->uid;
+		}
+		
+		if(!ctype_digit($number)) {
+			throw new Exception('Numer użytkownika przekazany do funkcji BotAPIGG::getPublicData() jest niepoprawny.');
+		}
+		
+		try {
+			$data = file_get_contents('http://api.gadu-gadu.pl/users/'.$number.'.xml');
+			if(!$data) {
+				throw new Exception('Nie udało się pobrać danych użytkownika z katalogu publicznego.');
+			}
+		}
+		catch(Exception $e) {
+			throw new Exception('Nie udało się pobrać danych użytkownika z katalogu publicznego.');
+		}
+		
+		libxml_use_internal_errors();
+		$data = simplexml_load_string($data);
+		libxml_clear_errors();
+		
+		if(!$data) {
+			throw new Exception('Dane użytkownika otrzymane z API Gadu-Gadu mają niepoprawny format.');
+		}
+		
+		if(!$data) {
+			throw new Exception('Dane użytkownika otrzymane z API Gadu-Gadu mają niepoprawny format.');
+		}
+		
+		
+		return (array)$data->users->user;
 	}
 }
 ?>

@@ -34,6 +34,7 @@ error_reporting(E_COMPILE_ERROR|E_PARSE);
 
 setlocale(LC_CTYPE, 'pl_PL.utf8', 'pl_PL', 'polish', 'plk');
 mb_internal_encoding('UTF-8');
+libxml_use_internal_errors();
 spl_autoload_register('botAutoload');
 set_error_handler('errorToException', E_ALL & ~E_NOTICE);
 ?>

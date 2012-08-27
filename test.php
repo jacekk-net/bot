@@ -51,10 +51,10 @@ testdir('./data/pogoda');
 testdir('./data/rss');
 testdir('./data/tv');
 testdir('./data/tv/cache');
-test('./db', !is_dir('./db') || is_writable('./db'));
-if(is_dir('./database')) {
-	testdir('./database');
+if(is_dir($db)) {
+	testdir('./db');
 }
+testdir('./database');
 
 echo '</table>';
 ?>

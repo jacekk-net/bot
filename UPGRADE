@@ -1,4 +1,13 @@
 ===========================
+ AKTUALIZACJA Z WERSJI 2.3
+===========================
+
+* usuń wszystkie pliki i katalogi (za wyjątkiem własnych modułów)
+  z katalogu ./modules
+* nadpisz wszystkie pliki w katalogach ./class i ./modules,
+  za wyjątkiem ./class/config.php
+
+===========================
  AKTUALIZACJA Z WERSJI 2.2
 ===========================
 
