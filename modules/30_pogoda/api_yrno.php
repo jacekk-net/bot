@@ -181,7 +181,7 @@ class api_yrno_parse {
 			unset($wind['day']);
 		}
 		
-		return array($temp, $wind);
+		return array('temp' => $temp, 'wind' => $wind);
 	}
 	
 	function getDaypartIcon($timestamp) {

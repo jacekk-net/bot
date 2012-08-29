@@ -3,7 +3,7 @@ class DownloadHelper {
 	protected $url;
 	protected $curl;
 	protected $headers = array();
-	protected $data = NULL;
+	protected $return = NULL;
 	
 	protected $cacheDir = './cache/';
 	protected $cacheFile;

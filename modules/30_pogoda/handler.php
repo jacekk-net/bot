@@ -71,7 +71,7 @@ class bot_pogoda_module implements BotModule {
 			return new BotMsg('Nie udało się pobrać danych o pogodzie - spróbuj ponownie za około 10 minut.');
 		}
 		
-		$out->a('<p>Pogoda dla '.htmlspecialchars($loc->name).', '.htmlspecialchars($loc->countryName).'.</p>'."\n\n");
+		$out->a('<p>Pogoda dla '.htmlspecialchars($loc['name']).', '.htmlspecialchars($loc['countryName']).'.</p>'."\n\n");
 		
 		$icon = $api->symbols[$api->getCurrentIcon()];
 		$weather = $api->getCurrentWeather();
@@ -98,6 +98,10 @@ class bot_pogoda_module implements BotModule {
 		return $out;
 	}
 	
+	function getHTMLforRange($data) {
+		return htmlspecialchars($data['from'].($data['from'] != $data['to'] ? '-'.$data['to'] : ''));
+	}
+	
 	function getHTMLforWeather($name, $icons, $weather) {
 		$html = '<p><b>'.$name.'</b><br />'."\n";
 		foreach($icons as $icon) {
@@ -106,8 +110,8 @@ class bot_pogoda_module implements BotModule {
 			}
 		}
 		$html .= '<br />'."\n"
-			. 'Temp.: '.$weather['temp']['from'].($weather['temp']['from'] != $weather['temp']['to'] ? '-'.$weather['temp']['to'] : '').'°C<br />'."\n"
-			. 'Wiatr: '.$weather['wind']['from'].($weather['wind']['from'] != $weather['wind']['to'] ? '-'.$weather['wind']['to'] : '').' km/h</p>'."\n\n";
+			. 'Temp.: '.$this->getHTMLforRange($weather['temp']['day']).'°C (w nocy: '.$this->getHTMLforRange($weather['temp']['night']).'°C)<br />'."\n"
+			. 'Wiatr: '.$this->getHTMLforRange($weather['wind']['day']).' km/h (w nocy: '.$this->getHTMLforRange($weather['wind']['night']).' km/h)</p>'."\n\n";
 		
 		return $html;
 	}
