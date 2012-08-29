@@ -34,7 +34,7 @@ class api_geonames extends api_geonames_config {
 				return NULL;
 			}
 			
-			$data = (array)$this->geoname[0];
+			$data = (array)$data->geoname[0];
 			foreach($data as &$value) {
 				$value = trim($value);
 			}
