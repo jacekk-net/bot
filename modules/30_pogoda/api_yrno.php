@@ -3,7 +3,7 @@ class api_yrno_parse {
 	protected $xml;
 	protected $dane;
 	
-	var $symbols = array(
+	static $symbols = array(
 		1 => 'Słonecznie',
 		2 => 'Lekkie zachmurzenie',
 		3 => 'Częściowe zachmurzenie',
@@ -29,7 +29,7 @@ class api_yrno_parse {
 		23 => 'Deszcz ze śniegiem, burze'
 	);
 	
-	var $wind = array(
+	static $wind = array(
 		'N' => 'północny',
 		'NW' => 'północno-zachodni',
 		'W' => 'zachodni',
@@ -39,6 +39,16 @@ class api_yrno_parse {
 		'E' => 'wschodni',
 		'NE' => 'północno-wschodni',
 	);
+	
+	static function wind($dir) {
+		if(isset(self::$wind[$dir])) {
+			return self::$wind[$dir];
+		}
+		else
+		{
+			return '';
+		}
+	}
 	
 	function __construct($xml) {
 		libxml_use_internal_errors();
@@ -52,16 +62,6 @@ class api_yrno_parse {
 	
 	function mktime($time) {
 		return strtotime(substr($time, 0, -1));
-	}
-	
-	function wind($dir) {
-		if(isset($this->wind[$dir])) {
-			return $this->wind[$dir];
-		}
-		else
-		{
-			return '';
-		}
 	}
 	
 	function parseForecast() {
@@ -96,8 +96,8 @@ class api_yrno_parse {
 				}
 				
 				$icon = (int)$time->symbol->attributes()->number;
-				if(is_int($this->symbols[$icon])) {
-					$icon = $this->symbols[$icon];
+				if(is_int(self::$symbols[$icon])) {
+					$icon = self::$symbols[$icon];
 				}
 				
 				$this->dane[$put][$to] = array(

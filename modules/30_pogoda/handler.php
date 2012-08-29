@@ -73,13 +73,14 @@ class bot_pogoda_module implements BotModule {
 		
 		$out->a('<p>Pogoda dla '.htmlspecialchars($loc['name']).', '.htmlspecialchars($loc['countryName']).'.</p>'."\n\n");
 		
-		$icon = $api->symbols[$api->getCurrentIcon()];
+		$icon = (int)$api->getCurrentIcon();
 		$weather = $api->getCurrentWeather();
 		
 		$out->a('<p><b>Teraz</b><br />'."\n"
-			. $icon.'<br />'."\n"
+			. '<img src="./data/pogoda/'.$icon.'.png" />'."\n"
+			. api_yrno_parse::$symbols[$icon].'<br />'."\n"
 			. 'Temp.: '.htmlspecialchars($weather['temp']).'°C<br />'."\n"
-			. 'Wiatr: '.htmlspecialchars($weather['wind']).' km/h, '.$api->wind($weather['wind']).'<br />'."\n"
+			. 'Wiatr: '.htmlspecialchars($weather['wind_speed']).' km/h, '.api_yrno_parse::wind($weather['wind_direction']).'<br />'."\n"
 			. 'Ciśnienie: '.htmlspecialchars($weather['pressure']).' hPa</p>'."\n\n");
 		
 		$when = time();
@@ -104,12 +105,20 @@ class bot_pogoda_module implements BotModule {
 	
 	function getHTMLforWeather($name, $icons, $weather) {
 		$html = '<p><b>'.$name.'</b><br />'."\n";
+		$desc = array();
+		$curr = 0;
 		foreach($icons as $icon) {
-			if(is_file('./data/pogoda/'.htmlspecialchars($icon).'.png')) {
-				$html .= '<img src="./data/pogoda/'.htmlspecialchars($icon).'.png" alt="" /> ';
+			$icon = (int)$icon;
+			if(is_file('./data/pogoda/'.$icon.'.png')) {
+				$html .= '<img src="./data/pogoda/'.$icon.'.png" alt="" /> ';
+				if($icon != $curr) {
+					$desc[] = api_yrno_parse::$symbols[$icon];
+					$curr = $icon;
+				}
 			}
 		}
 		$html .= '<br />'."\n"
+			. implode(' / ', $desc).'<br />'."\n"
 			. 'Temp.: '.$this->getHTMLforRange($weather['temp']['day']).'°C (w nocy: '.$this->getHTMLforRange($weather['temp']['night']).'°C)<br />'."\n"
 			. 'Wiatr: '.$this->getHTMLforRange($weather['wind']['day']).' km/h (w nocy: '.$this->getHTMLforRange($weather['wind']['night']).' km/h)</p>'."\n\n";
 		
