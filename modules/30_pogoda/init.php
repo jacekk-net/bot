@@ -53,5 +53,5 @@ class bot_pogoda_init implements BotModuleInit {
 	}
 }
 
-return 'bot_data_init';
+return 'bot_pogoda_init';
 ?>
