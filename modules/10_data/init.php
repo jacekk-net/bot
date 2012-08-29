@@ -31,7 +31,8 @@ class bot_data_init implements BotModuleInit {
 			return new BotMsg('<b>data</b> <i>[dzień]</i><br />'."\n"
 				. '   Informacje o danym dniu.<br />'."\n"
 				. '<b>imieniny</b> <i>imię</i><br />'."\n"
-				. '   Kiedy <i>imię</i> obchodzi imieniny.');
+				. '   Kiedy <i>imię</i> obchodzi imieniny.<br />'."\n"
+				. '<br />'."\n");
 		}
 		elseif(substr($params, 0, 1) == 'd') {
 			return new BotMsg('<b>data</b> <i>[dzień]</i> (aliasy: <b>d, dzień</b>)<br />'."\n"
