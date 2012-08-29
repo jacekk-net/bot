@@ -6,10 +6,13 @@
   z katalogu ./modules
 * nadpisz wszystkie pliki w katalogach ./class i ./modules,
   za wyjątkiem ./class/config.php
+* usuń wszystkie pliki z katalogu ./data/pogoda
+* wgraj nowe pliki do folderu ./data/pogoda
+* usuń wszystkie pliki z katalogu ./cache
 
-===========================
- AKTUALIZACJA Z WERSJI 2.2
-===========================
+======================================
+ AKTUALIZACJA Z WERSJI 2.2/2.1/2.0 RC
+======================================
 
 * usuń wszystkie pliki i katalogi (za wyjątkiem własnych modułów)
   z katalogu ./modules
@@ -17,7 +20,10 @@
   za wyjątkiem ./class/config.php
 * zastąp plik ./data/lotto/pobierz.php
 * zastąp plik ./data/tv/pobierz.php
+* usuń wszystkie pliki z katalogu ./data/pogoda
+* wgraj nowe pliki do folderu ./data/pogoda
 * usuń wszystkie pliki z katalogów ./cache oraz ./data/tv/cache
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 * pobierz Account Key ze strony https://datamarket.azure.com/
   (wymaga identyfikatora Windows Live ID) i uzyskaj subskrybcję Microsoft Translator:
   https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb
@@ -31,13 +37,6 @@ class msapi_config {
 class msapi_config {
         protected $accountKey = 'A123BC9238...ADD';
 
-==================================
- AKTUALIZACJA Z WERSJI 2.0 RC/2.1
-==================================
-
-* wykonaj kroki opisane w sekcji "AKTUALIZACJA Z WERSJI 2.2"
-* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
-
 ================================
  AKTUALIZACJA Z WERSJI 2.0 Beta
 ================================
@@ -45,8 +44,7 @@ class msapi_config {
 * zastąp wszystkie pliki (bez podfolderów!) w ./data,
   a następnie popraw ścieżkę do bota w ./data/update.sh
 * zastąp plik aliases w ./data/tv
-* wykonaj polecenia z działu "AKTUALIZACJA Z WERSJI 2.2"
-* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
+* wykonaj polecenia z działu "AKTUALIZACJA Z WERSJI 2.2/2.1/2.0 RC"
 
 -------
  UWAGA

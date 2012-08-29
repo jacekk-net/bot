@@ -5,9 +5,9 @@
 |  |____ |  ||  \____ |  |____ |  |\   ||  \____ |  \__/  ||   ____   |
 |_______||__| \______||_______||__| \__| \______| \______/ |__|    |__|
 
-======================
-Creative Commons by-nc
-======================
+========================
+ Creative Commons by-nc
+========================
 
 Niniejszy program, za wyjątkiem wymienionych poniżej zbiorów, jest rozpowszechniany na licencji:
 
@@ -17,9 +17,9 @@ Pełna treść licencji jest dostępna na stronie:
 http://creativecommons.org/licenses/by-nc/2.5/legalcode.pl
 
 
-=======
-GNU GPL
-=======
+=========
+ GNU GPL
+=========
 
 Niektóre zbiory danych wykorzystywane w programie są udostępniane na licencji GNU GPL, której treść znajduje się w pliku GNU-GPL. Bot może działać bez tych plików po usunięciu odpowiedniego modułu z katalogu /modules/
 
@@ -40,10 +40,19 @@ Zbiory na w/w licencji:
    praca pochodna od w/w na potrzeby bota, wygenerowana za pomoca: /data/synonimy/parse.php
 
 
+===========================
+ CC BY (uznanie autorstwa)
+===========================
 
-=============
-Inna/nieznana
-=============
+Niektóre zbiory danych wykorzystywane w programie są udostępniane na licencji CC BY 3.0, której treść znajduje się pod adresem http://creativecommons.org/licenses/by/3.0/
+
+/data/pogoda/*.png
+   http://api.yr.no/license_data.html
+
+
+===============
+ Inna/nieznana
+===============
 
 Poniższe zbiory zostały znalezione w Internecie, a autor nie zaznaczył licencji:
 
