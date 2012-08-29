@@ -7,7 +7,7 @@ class bot_pogoda_module implements BotModule {
 		$arg = trim($msg->args);
 		
 		$out = new BotMsg();
-		
+		$loc = FALSE;
 		
 		if(empty($arg)) {
 			$msg->session->setClass('pogoda');
@@ -43,16 +43,6 @@ class bot_pogoda_module implements BotModule {
 				}
 				
 				$out->a('<p>Nie ustawiono miasta (pomoc - wpisz: help miasto) - '.(!$forced ? 'na podstawie danych z katalogu publicznego ' : '').'wybieram miasto '.$arg.'</p>'."\n\n");
-				
-				$loc = new api_geonames();
-				$loc = $loc->search($arg);
-				
-				if($loc === FALSE) {
-					return new BotMsg('Nie udało się pobrać danych o podanym miejscu - spróbuj ponownie za około 10 minut.');
-				}
-				elseif($loc === NULL) {
-					return new BotMsg('Dla podanego miejsca nie udało się uzyskać współrzędnych geograficznych - spróbuj wpisać inną nazwę.');
-				}
 			}
 			else
 			{
@@ -63,6 +53,18 @@ class bot_pogoda_module implements BotModule {
 					'lat' => $msg->session->geo['lat'],
 					'lng' => $msg->session->geo['lon']
 				);
+			}
+		}
+		
+		if($loc === FALSE) {
+			$loc = new api_geonames();
+			$loc = $loc->search($arg);
+			
+			if($loc === FALSE) {
+				return new BotMsg('Nie udało się pobrać danych o podanym miejscu - spróbuj ponownie za około 10 minut.');
+			}
+			elseif($loc === NULL) {
+				return new BotMsg('Dla podanego miejsca nie udało się uzyskać współrzędnych geograficznych - spróbuj wpisać inną nazwę.');
 			}
 		}
 		
