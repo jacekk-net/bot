@@ -77,10 +77,10 @@ class bot_pogoda_module implements BotModule {
 		$weather = $api->getCurrentWeather();
 		
 		$out->a('<p><b>Teraz</b><br />'."\n"
-			. '<img src="./data/pogoda/'.$icon.'.png" />'."\n"
+			. '<img src="./data/pogoda/'.$icon.'.png" /><br />'."\n"
 			. api_yrno_parse::$symbols[$icon].'<br />'."\n"
 			. 'Temp.: '.htmlspecialchars($weather['temp']).'°C<br />'."\n"
-			. 'Wiatr: '.htmlspecialchars($weather['wind_speed']).' km/h, '.api_yrno_parse::wind($weather['wind_direction']).'<br />'."\n"
+			. 'Wiatr: '.htmlspecialchars($weather['wind_speed']).' km/h, '.api_yrno_parse::wind($weather['wind_dir']).'<br />'."\n"
 			. 'Ciśnienie: '.htmlspecialchars($weather['pressure']).' hPa</p>'."\n\n");
 		
 		$when = time();
