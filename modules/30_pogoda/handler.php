@@ -37,6 +37,7 @@ class bot_pogoda_module implements BotModule {
 				catch(Exception $e) {
 				}
 				
+				$forced = FALSE;
 				if(empty($arg)) {
 					$arg = 'Warszawa';
 					$forced = TRUE;
