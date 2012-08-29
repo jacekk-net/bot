@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__).'/api_geonames.php');
 require_once(dirname(__FILE__).'/api_yrno.php');
 
-class bot_pogoda_module extends BotModule {
+class bot_pogoda_module implements BotModule {
 	function pogoda($msg, $params) {
 		$arg = trim($msg->args);
 		

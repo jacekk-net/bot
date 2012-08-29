@@ -10,7 +10,7 @@ class DownloadHelper {
 	protected $cacheInfo = array();
 	
 	function build_url($components) {
-		return $components['scheme'].'://'.($components['user'] ? $components['user'].($components['pass'] ? ':'.$components['pass'] : '').'@' : '').$components['host'].($components['path'] ? $components['path'] : '/').($components['query'] ? '?'.$components['query'] : '');
+		return $components['scheme'].'://'.(isset($components['user']) && !empty($components['user']) ? $components['user'].(isset($components['pass']) && !empty($components['pass']) ? ':'.$components['pass'] : '').'@' : '').$components['host'].($components['path'] ? $components['path'] : '/').($components['query'] ? '?'.$components['query'] : '');
 	}
 	
 	function __construct($url) {
@@ -111,7 +111,6 @@ class DownloadHelper {
 		
 		$this->cacheInfo['last_updated'] = time();
 		$info = $this->getinfo();
-		var_dump($info);
 		
 		if($info['http_code'] == '304') {
 			// Plik się nie zmienił...

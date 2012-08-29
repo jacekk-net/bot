@@ -15,7 +15,7 @@ class api_geonames extends api_geonames_config {
 			}
 			
 			libxml_use_internal_errors();
-			$data = simplexml_load_string();
+			$data = simplexml_load_string($data);
 			libxml_clear_errors();
 			
 			if(!$data) {
