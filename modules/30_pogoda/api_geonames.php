@@ -23,8 +23,8 @@ class api_geonames extends api_geonames_config {
 				return FALSE;
 			}
 			
-			// Trzymaj w cache przez około 278 dni
-			$download->cacheFor(1000000);
+			// Trzymaj w cache przez około 116 dni
+			$download->cacheFor(10000000);
 			
 			if($data->geoname[0]->getName() != 'geoname'
 				|| $data->geoname[0]->name->getName() != 'name'
