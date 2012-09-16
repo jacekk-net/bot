@@ -97,6 +97,7 @@ class bot_kino_module implements BotModule {
 	
 	function ustaw($msg, $params) {
 		$arg = funcs::utfToAscii($msg->args);
+		$msg->session->setClass('kino');
 		
 		if(empty($arg)) {
 			unset($msg->session->kino);
@@ -112,6 +113,7 @@ class bot_kino_module implements BotModule {
 	
 	function handle($msg, $params) {
 		$arg = funcs::utfToAscii($msg->args);
+		$msg->session->setClass('kino');
 		
 		if(empty($arg)) {
 			$arg = $msg->session->kino;
