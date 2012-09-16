@@ -13,10 +13,6 @@ function botAutoload($class) {
 		$class = substr($class, 0, -9);
 	}
 	
-	if(!defined('BOT_TOPDIR')) {
-		define('BOT_TOPDIR', dirname(__FILE__).'/../');
-	}
-	
 	if(is_file(BOT_TOPDIR.'/class/legacy/'.$class.'.php')) {
 		require_once(BOT_TOPDIR.'/class/legacy/'.$class.'.php');
 	}
@@ -24,6 +20,10 @@ function botAutoload($class) {
 	{
 		require_once(BOT_TOPDIR.'/class/'.$class.'.php');
 	}
+}
+
+if(!defined('BOT_TOPDIR')) {
+	define('BOT_TOPDIR', dirname(__FILE__).'/../');
 }
 
 function errorToException($errno, $errstr, $errfile, $errline) {
