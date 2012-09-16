@@ -10,7 +10,7 @@ class DownloadHelper {
 	protected $cacheInfo = array();
 	
 	function build_url($components) {
-		return $components['scheme'].'://'.(isset($components['user']) && !empty($components['user']) ? $components['user'].(isset($components['pass']) && !empty($components['pass']) ? ':'.$components['pass'] : '').'@' : '').$components['host'].($components['path'] ? $components['path'] : '/').($components['query'] ? '?'.$components['query'] : '');
+		return $components['scheme'].'://'.(isset($components['user']) && !empty($components['user']) ? $components['user'].(isset($components['pass']) && !empty($components['pass']) ? ':'.$components['pass'] : '').'@' : '').$components['host'].(isset($components['path']) && !empty($components['path']) ? $components['path'] : '/').(isset($components['query']) && !empty($components['query']) ? '?'.$components['query'] : '');
 	}
 	
 	function __construct($url) {
