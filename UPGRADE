@@ -4,9 +4,11 @@
 
 * zastąp plik ./data/lotto/pobierz.php
 * zastąp plik ./modules/70_kino/handler.php
+
 * zastąp plik ./.htaccess
+* wgraj plik ./upgrade.php
 * uruchom plik upgrade.php w przeglądarce
-* usuń plik upgrade.php
+* usuń plik ./upgrade.php
 
 ===========================
  AKTUALIZACJA Z WERSJI 2.3
@@ -19,10 +21,12 @@
 * usuń wszystkie pliki z katalogu ./data/pogoda
 * wgraj nowe pliki do folderu ./data/pogoda
 * zastąp plik ./data/lotto/pobierz.php
-* zastąp plik ./.htaccess
 * usuń wszystkie pliki z katalogu ./cache
+
+* zastąp plik ./.htaccess
+* wgraj plik ./upgrade.php
 * uruchom plik upgrade.php w przeglądarce
-* usuń plik upgrade.php
+* usuń plik ./upgrade.php
 
 ======================================
  AKTUALIZACJA Z WERSJI 2.2/2.1/2.0 RC

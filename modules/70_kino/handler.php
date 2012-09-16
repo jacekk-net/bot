@@ -1,33 +1,19 @@
 <?php
 class bot_kino_module implements BotModule {
 	function cache($url) {
-		$time = '+2 hour';
-		$dir = './data/kino/cache/';
-		
-		if(file_exists($dir.md5($url))) {
-			$mtime = @filemtime($dir.md5($url));
-		}
-		
-		if($mtime && $mtime > strtotime('today '.$time) && $mtime < strtotime('tomorrow '.$time)) {
-			$dane = file_get_contents($dir.md5($url));
-		}
-		else
-		{
-			$dane = @file_get_contents($url);
-			if(!$dane) {
-				return FALSE;
-			}
-			
-			file_put_contents($dir.md5($url), $dane);
-		}
+		$down = new DownloadHelper($url);
+		$dane = $down->exec();
 		
 		libxml_use_internal_errors(TRUE);
 		
 		$dom = new DOMDocument();
 		if(!$dom->loadHTML($dane)) {
 			libxml_use_internal_errors(FALSE);
+			$down->cacheFor(1800);
 			return FALSE;
 		}
+		
+		$down->cacheUntil(strtotime('tomorrow midnight'));
 		
 		return $dom;
 	}
@@ -59,7 +45,7 @@ class bot_kino_module implements BotModule {
 		
 		foreach($dane as $kino) {
 			$name = trim($kino->textContent);
-			$return[$name] = $kino->getAttribute('name');
+			$return[$name] = $kino->getAttribute('href');
 		}
 		
 		return $return;
@@ -70,19 +56,34 @@ class bot_kino_module implements BotModule {
 		if(!$xml) return FALSE;
 		
 		$xpath = new DOMXPath($xml);
-		$dane = $xpath->query('//div[@id=\'mainContent\']/table//a[@name=\''.$kino.'\']/../../following-sibling::tr');
+		$dane = $xpath->query('//div[@id=\'mainContent\']/table//a[@href=\''.$kino.'\']/../../following-sibling::tr');
 		$return = array();
 		
 		foreach($dane as $film) {
-			if($film->firstChild && $film->firstChild->nodeName == 'th') break;
+			if(!$film->firstChild) {
+				break;
+			}
+			if($film->firstChild->nodeName == 'th') {
+				break;
+			}
+			if($film->firstChild->nodeName != 'td') {
+				break;
+			}
 			
 			$tds = $xpath->query('td', $film);
 			$name = $xpath->query('a[1]', $tds->item(0));
 			
 			$more = array();
-			$more_xml = $xpath->query('span[@class=\'reper\']/span', $tds->item(0));
+			$more_desc = array(
+				's3d-movie' => '3D',
+				'dubbing-movie' => 'dubbing',
+			);
+			$more_xml = $xpath->query('span[@class=\'reper\']/div', $tds->item(0));
 			foreach($more_xml as $more_x) {
-				$more[] = $more_x->textContent;
+				$more_x = $more_x->getAttribute('class');
+				if(isset($more_desc[$more_x])) {
+					$more[] = $more_desc[$more_x];
+				}
 			}
 			
 			$return[] = array(
