@@ -1,4 +1,10 @@
 ===========================
+ AKTUALIZACJA Z WERSJI 2.4
+===========================
+
+* zastąp plik ./data/lotto/pobierz.php
+
+===========================
  AKTUALIZACJA Z WERSJI 2.3
 ===========================
 
@@ -8,6 +14,7 @@
   za wyjątkiem ./class/config.php
 * usuń wszystkie pliki z katalogu ./data/pogoda
 * wgraj nowe pliki do folderu ./data/pogoda
+* zastąp plik ./data/lotto/pobierz.php
 * usuń wszystkie pliki z katalogu ./cache
 
 ======================================

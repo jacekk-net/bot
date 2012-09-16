@@ -7,12 +7,12 @@ class lotto {
 	
 	// Lista gier.
 	protected $gry = array(
-		// nazwa => array(ilość liczb, plus?)
-		'lotto' => array(6, FALSE, 'dl'),
-		'mini-lotto' => array(5, FALSE, 'el'),
-		'kaskada' => array(12, FALSE, 'ka'),
-		'multi-multi' => array(20, TRUE, 'mm'),
-		'joker' => array(5, FALSE, 'jk')
+		// nazwa => array(ilość liczb, plus?, lottoplus?)
+		'lotto' => array(6, FALSE, 6),
+		'mini-lotto' => array(5, FALSE, 0),
+		'kaskada' => array(12, FALSE, 0),
+		'multi-multi' => array(20, TRUE, 0),
+		'joker' => array(5, FALSE, 0)
 	);
 	
 	// Spróbuj pobrać stronę http://lotto.pl/wyniki-gier
@@ -102,12 +102,12 @@ class lotto {
 		}
 		
 		$wyniki = array();
-		$dane = $this->wytnij($this->strona, '<div class="start-wyniki_'.$gra.'">',
-		'<div class="start-wyniki_', 'Nie znaleziono na stronie wyników dla gry '.$gra);
+		$dane = $this->wytnij($this->strona, '<div class="start-wyniki_'.$gra,
+			'<div class="start-wyniki_', 'Nie znaleziono na stronie wyników dla gry '.$gra);
 		
 		$poz_dane = 0;
 		for($l = 1; $l <= $liczba; $l++) {
-			$data = $this->wytnij($dane, '<div class="wyniki_data">', '</div>',
+			$data = $this->wytnij($dane, '<div class="wyniki_data', '</div>',
 				'Nie znaleziono '.$l.'-ej informacji o losowanu gry '.$gra, $poz_dane);
 			
 			$pozycja = 0;
@@ -117,8 +117,8 @@ class lotto {
 				'Nie znaleziono '.$l.'-ej godziny losowania gry '.$gra, $pozycja);
 			
 			try {
-				$liczby = $this->wytnij($dane, '<div class="glowna_wyniki_'.$gra.'">', "\t".'</div>',
-				'Nie znaleziono na stronie '.$l.'-ch wyników dla gry '.$gra, $poz_dane);
+				$liczby = $this->wytnij($dane, '<div class="glowna_wyniki_'.$gra, "\t".'</div>',
+					'Nie znaleziono na stronie '.$l.'-ch wyników dla gry '.$gra, $poz_dane);
 			}
 			catch(Exception $e) {
 				break;
@@ -129,13 +129,31 @@ class lotto {
 			$pozycja = 0;
 			for($i = 0; $i < $this->gry[$gra][0]; $i++) {
 				$wynik['liczby'][] = $this->wytnij($liczby, '<div class="wynik_'.$gra.'">',
-				'</div>', NULL, $pozycja);
+					'</div>', NULL, $pozycja);
 			}
 			
 			// Szukamy plusa
 			if($this->gry[$gra][1]) {
 				$wynik['plus'] = $this->wytnij($dane, '<div class="wynik_'.$gra.'_plus">',
-				'</div>', NULL, $poz_dane);
+					'</div>', NULL, $poz_dane);
+			}
+			
+			// Szukamy lottoplusa
+			if($this->gry[$gra][2] > 0) {
+				try {
+					$liczby = $this->wytnij($dane, '<div class="glowna_wyniki_'.$gra.'plus">', "\t".'</div>',
+						'Nie znaleziono na stronie '.$l.'-ch wyników dla gry '.$gra.'plus', $poz_dane);
+				}
+				catch(Exception $e) {
+					continue;
+				}
+				
+				$pozycja = 0;
+				$wynik['plus'] = array();
+				for($i = 0; $i < $this->gry[$gra][2]; $i++) {
+					$wynik['plus'][] = $this->wytnij($liczby, '<div class="wynik_'.$gra.'plus">',
+						'</div>', 'Nie znaleziono wyników losowania '.$gra.'plus', $pozycja);
+				}
 			}
 			
 			$wyniki[] = $wynik;
@@ -195,6 +213,9 @@ class lotto {
 						$output[$i+1] = $wynik['liczby'][$i];
 					}
 					if($data[1]) {
+						$output['plus'] = $wynik['plus'];
+					}
+					if(($data[2] > 0) && isset($wynik['plus'])) {
 						$output['plus'] = $wynik['plus'];
 					}
 					file_put_contents('./last_'.$skrot.'.txt', $output['data']);
