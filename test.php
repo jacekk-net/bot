@@ -42,7 +42,6 @@ testdir('./cache');
 testdir('./data');
 testdir('./data/humor');
 testdir('./data/humor/archiwum');
-testdir('./data/kino/cache');
 testdir('./data/kurs');
 testdir('./data/kurs/archiwum');
 testdir('./data/lotto');
@@ -51,7 +50,7 @@ testdir('./data/pogoda');
 testdir('./data/rss');
 testdir('./data/tv');
 testdir('./data/tv/cache');
-if(is_dir($db)) {
+if(is_dir('./db')) {
 	testdir('./db');
 }
 testdir('./database');
