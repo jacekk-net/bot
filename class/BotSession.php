@@ -55,10 +55,10 @@ class BotSession {
 				$version = 1;
 			}
 			
-			if($version < 2) {
-				$this->PDO->query('DELETE FROM data WHERE class=NULL AND name=\'user_struct\'');
-				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 2)');
-				$version = 2;
+			if($version < 3) {
+				$this->PDO->query('DELETE FROM data WHERE class IS NULL AND name=\'user_struct\'');
+				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 3)');
+				$version = 3;
 			}
 			
 			return;
