@@ -2,8 +2,11 @@
  AKTUALIZACJA Z WERSJI 2.4
 ===========================
 
+* nadpisz wszystkie pliki w katalogu ./class (oraz podkatalogach),
+  za wyjątkiem ./class/config.php
 * zastąp plik ./data/lotto/pobierz.php
 * zastąp plik ./modules/70_kino/handler.php
+* zastąp plik ./test.php
 * usuń katalog ./data/kino
 
 ===========================
@@ -12,12 +15,13 @@
 
 * usuń wszystkie pliki i katalogi (za wyjątkiem własnych modułów)
   z katalogu ./modules
-* nadpisz wszystkie pliki w katalogach ./class i ./modules,
+* nadpisz wszystkie pliki w katalogach ./class i ./modules (oraz podkatalogach),
   za wyjątkiem ./class/config.php
 * usuń wszystkie pliki z katalogu ./data/pogoda
 * wgraj nowe pliki do folderu ./data/pogoda
 * zastąp plik ./data/lotto/pobierz.php
 * usuń katalog ./data/kino
+* zastąp plik ./test.php
 * usuń wszystkie pliki z katalogu ./cache
 
 ======================================
@@ -30,6 +34,7 @@
   za wyjątkiem ./class/config.php
 * zastąp plik ./data/lotto/pobierz.php
 * zastąp plik ./data/tv/pobierz.php
+* zastąp plik ./test.php
 * usuń wszystkie pliki z katalogu ./data/pogoda
 * wgraj nowe pliki do folderu ./data/pogoda
 * usuń wszystkie pliki z katalogów ./cache oraz ./data/tv/cache
