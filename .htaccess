@@ -31,9 +31,6 @@ Deny from all
 <Files test.php>
 	Allow from all
 </Files>
-<Files upgrade.php>
-	Allow from all
-</Files>
 
 <Files index.html>
 	Allow from all

@@ -6,11 +6,6 @@
 * zastąp plik ./modules/70_kino/handler.php
 * usuń katalog ./data/kino
 
-* zastąp plik ./.htaccess
-* wgraj plik ./upgrade.php
-* uruchom plik upgrade.php w przeglądarce
-* usuń plik ./upgrade.php
-
 ===========================
  AKTUALIZACJA Z WERSJI 2.3
 ===========================
@@ -24,11 +19,6 @@
 * zastąp plik ./data/lotto/pobierz.php
 * usuń katalog ./data/kino
 * usuń wszystkie pliki z katalogu ./cache
-
-* zastąp plik ./.htaccess
-* wgraj plik ./upgrade.php
-* uruchom plik upgrade.php w przeglądarce
-* usuń plik ./upgrade.php
 
 ======================================
  AKTUALIZACJA Z WERSJI 2.2/2.1/2.0 RC

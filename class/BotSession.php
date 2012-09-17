@@ -37,6 +37,24 @@ class BotSession {
 			$this->PDO = new PDO('sqlite:'.BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite');
 			$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$this->PDO->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
+			
+			$st = $this->PDO->query('SELECT value FROM data WHERE class=\'\' AND name=\'_version\'');
+			if($st->rowCount > 0) {
+				$row = $st->fetch(PDO::FETCH_ASSOC);
+				$version = (int)$row['value'];
+			}
+			else
+			{
+				$version = 0;
+			}
+			$st->closeCursor();
+			
+			if($version < 1) {
+				$this->PDO->query('UPDATE data SET class=\'kino\' WHERE class=\'\' AND name=\'kino\'');
+				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 1)');
+				$version = 1;
+			}
+			
 			return;
 		}
 		
@@ -64,6 +82,8 @@ class BotSession {
 			
 			$this->PDO->beginTransaction();
 			$st = $this->PDO->prepare('INSERT OR REPLACE INTO data (class, name, value) VALUES (?, ?, ?)');
+			
+			$st->execute(array('', '_version', 1));
 			
 			foreach($files as $file) {
 				$data = unserialize(file_get_contents($file));

@@ -1,5 +1,4 @@
 * rozpakuj archiwum z botem do wybranego folderu
-* usuń plik upgrade.php
 * zezwól na zapis (ustaw chmody) w folderach i ich podkatalogach:
 	- ./cache
 	- ./data
