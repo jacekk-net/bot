@@ -55,6 +55,12 @@ class BotSession {
 				$version = 1;
 			}
 			
+			if($version < 2) {
+				$this->PDO->query('DELETE FROM data WHERE class=NULL AND name=\'user_struct\'');
+				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 2)');
+				$version = 2;
+			}
+			
 			return;
 		}
 		
@@ -83,7 +89,7 @@ class BotSession {
 			$this->PDO->beginTransaction();
 			$st = $this->PDO->prepare('INSERT OR REPLACE INTO data (class, name, value) VALUES (?, ?, ?)');
 			
-			$st->execute(array('', '_version', 1));
+			$st->execute(array('', '_version', 2));
 			
 			foreach($files as $file) {
 				$data = unserialize(file_get_contents($file));
