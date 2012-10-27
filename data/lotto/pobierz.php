@@ -7,12 +7,12 @@ class lotto {
 	
 	// Lista gier.
 	protected $gry = array(
-		// nazwa => array(ilość liczb, plus?, lottoplus?)
-		'lotto' => array(6, FALSE, 6),
-		'mini-lotto' => array(5, FALSE, 0),
-		'kaskada' => array(12, FALSE, 0),
-		'multi-multi' => array(20, TRUE, 0),
-		'joker' => array(5, FALSE, 0)
+		// nazwa => array(ilość liczb, plus?, lottoplus?, skrót)
+		'lotto' => array(6, FALSE, 6, 'dl'),
+		'mini-lotto' => array(5, FALSE, 0, 'el'),
+		'kaskada' => array(12, FALSE, 0, 'ka'),
+		'multi-multi' => array(20, TRUE, 0, 'mm'),
+		'joker' => array(5, FALSE, 0, 'jk')
 	);
 	
 	// Spróbuj pobrać stronę http://lotto.pl/wyniki-gier
@@ -168,7 +168,7 @@ class lotto {
 			if($gra == 'multi-multi') {
 				$wyniki = $this->wyniki($gra, 2);
 				$wynik = $wyniki[0];
-				$skrot = $data[2].substr($wynik['godzina'], 0, 2);
+				$skrot = $data[3].substr($wynik['godzina'], 0, 2);
 				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
 				if($last_data != $wynik['data']) {
 					$output = array();
@@ -185,7 +185,7 @@ class lotto {
 				}
 				
 				$wynik = $wyniki[1];
-				$skrot = $data[2].substr($wynik['godzina'], 0, 2);
+				$skrot = $data[3].substr($wynik['godzina'], 0, 2);
 				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
 				if($last_data != $wynik['data']) {
 					$output = array();
@@ -204,7 +204,7 @@ class lotto {
 			else
 			{
 				$wynik = $this->wynik($gra);
-				$skrot = $data[2];
+				$skrot = $data[3];
 				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
 				if($last_data != $wynik['data']) {
 					$output = array();
