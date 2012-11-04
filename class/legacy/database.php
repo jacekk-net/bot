@@ -10,7 +10,7 @@ class database {
 		}
 		
 		$data = new BotSession($user);
-		$data->class = $modul;
+		$data->setClass($modul);
 		return $data;
 	}
 	
