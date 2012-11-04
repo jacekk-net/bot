@@ -39,8 +39,8 @@ class BotSession {
 			$this->PDO->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
 			
 			$st = $this->PDO->query('SELECT value FROM data WHERE class=\'\' AND name=\'_version\'');
-			if($st->rowCount > 0) {
-				$row = $st->fetch(PDO::FETCH_ASSOC);
+			$row = $st->fetch(PDO::FETCH_ASSOC);
+			if(is_array($row)) {
 				$version = (int)$row['value'];
 			}
 			else
