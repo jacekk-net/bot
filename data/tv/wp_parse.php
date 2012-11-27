@@ -37,7 +37,7 @@ class wp_parse {
 		}
 		$this->context = $context->item(0);
 		
-		$name = $this->xpath->query('.//h2[@class="sh2"]//span//text()', $this->context);
+		$name = $this->xpath->query('.//*[@class="sh2"]//span//text()', $this->context);
 		if($name->length != 1) {
 			throw new Exception('Nie znaleziono nazwy stacji, błędny HTML.');
 		}
