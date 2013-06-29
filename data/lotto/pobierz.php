@@ -168,7 +168,13 @@ class lotto {
 			if($gra == 'multi-multi') {
 				$wyniki = $this->wyniki($gra, 2);
 				$wynik = $wyniki[0];
-				$skrot = $data[3].substr($wynik['godzina'], 0, 2);
+				
+				$godzina = substr($wynik['godzina'], 0, 2);
+				if($godzina == '21') {
+					$godzina = '22';
+				}
+				$skrot = $data[3].$godzina;
+				
 				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
 				if($last_data != $wynik['data']) {
 					$output = array();
@@ -185,7 +191,13 @@ class lotto {
 				}
 				
 				$wynik = $wyniki[1];
-				$skrot = $data[3].substr($wynik['godzina'], 0, 2);
+				
+				$godzina = substr($wynik['godzina'], 0, 2);
+				if($godzina == '21') {
+					$godzina = '22';
+				}
+				$skrot = $data[3].$godzina;
+				
 				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
 				if($last_data != $wynik['data']) {
 					$output = array();
@@ -205,6 +217,7 @@ class lotto {
 			{
 				$wynik = $this->wynik($gra);
 				$skrot = $data[3];
+				
 				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
 				if($last_data != $wynik['data']) {
 					$output = array();
