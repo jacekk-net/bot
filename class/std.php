@@ -16,8 +16,7 @@ function botAutoload($class) {
 	if(is_file(BOT_TOPDIR.'/class/legacy/'.$class.'.php')) {
 		require_once(BOT_TOPDIR.'/class/legacy/'.$class.'.php');
 	}
-	else
-	{
+	elseif(is_file(BOT_TOPDIR.'/class/'.$class.'.php')) {
 		require_once(BOT_TOPDIR.'/class/'.$class.'.php');
 	}
 }
