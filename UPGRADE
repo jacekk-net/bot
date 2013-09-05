@@ -1,3 +1,14 @@
+Wersję można sprawdzić w pliku ./class/legacy/main.php
+
+===========================
+ AKTUALIZACJA Z WERSJI 2.5
+===========================
+
+* nadpisz wszystkie pliki w katalogu ./class (oraz podkatalogach),
+  za wyjątkiem ./class/config.php
+* zastąp plik ./data/lotto/pobierz.php
+* zastąp plik ./data/tv/wp_parse.php
+
 ===========================
  AKTUALIZACJA Z WERSJI 2.4
 ===========================

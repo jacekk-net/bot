@@ -16,7 +16,7 @@ class BotImageGG extends BotImage {
 	
 	function getImageData() {
 		if($this->data === NULL) {
-			$push = new BotGGAPI();
+			$push = new BotAPIGG();
 			$this->data = $push->getImage($this->hash);
 		}
 		

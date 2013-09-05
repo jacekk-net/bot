@@ -1,18 +1,29 @@
 <?php
 /**
- * Klasa przechowująca dane użytkownika. Całość przypomina mechanizm sesji w PHP.
+ * Klasa przechowująca dane przekazane przez użytkownika,
+ * w szczególności jego ustawienia.
  */
 class BotSession {
 	private $PDO;
 	
 	/**
 	 * Nazwa modułu, którego zmienne klasa przetwarza
-	 * @var string max. 40 znaków
+	 * @var string $class max. 40 znaków
 	 */
 	protected $class = '';
 	protected $class_empty = TRUE;
 	
+	/**
+	 * Pseudo-URL użytkownika.
+	 * @see BotUser
+	 * @var string $user URL użytkownika
+	 */
 	private $user;
+	/**
+	 * Klasa z identyfikatorem użytkownika
+	 * @var BotUser $user_struct
+	 */
+	private $user_struct;
 	
 	/**
 	 * Inicjuje klasę w zależności od użytkownika
@@ -55,10 +66,10 @@ class BotSession {
 				$version = 1;
 			}
 			
-			if($version < 3) {
+			if($version < 4) {
 				$this->PDO->query('DELETE FROM data WHERE class IS NULL AND name=\'user_struct\'');
-				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 3)');
-				$version = 3;
+				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 4)');
+				$version = 4;
 			}
 			
 			return;
@@ -71,7 +82,7 @@ class BotSession {
 			
 			$this->PDO->query(
 				'CREATE TABLE data (
-					class VARCHAR(50),
+					class VARCHAR(50) NOT NULL DEFAULT \'\',
 					name VARCHAR(40) NOT NULL,
 					value TEXT NOT NULL,
 					PRIMARY KEY (
@@ -81,6 +92,8 @@ class BotSession {
 				)'
 			);
 			
+			$this->PDO->query('INSERT INTO data (class, name, value) VALUES (\'\', \'_version\', 4)');
+			
 			$files = glob(BOT_TOPDIR.'/db/*/'.$this->user_struct['user'].'.ggdb');
 			if(!$files) {
 				return;
@@ -89,12 +102,10 @@ class BotSession {
 			$this->PDO->beginTransaction();
 			$st = $this->PDO->prepare('INSERT OR REPLACE INTO data (class, name, value) VALUES (?, ?, ?)');
 			
-			$st->execute(array('', '_version', 2));
-			
 			foreach($files as $file) {
 				$data = unserialize(file_get_contents($file));
 				foreach($data as $name => $value) {
-					$st->execute(array($this->class, $name, $value));
+					$st->execute(array($this->class, $name, serialize($value)));
 				}
 			}
 			
@@ -112,6 +123,19 @@ class BotSession {
 		}
 	}
 	
+	/**
+	 * Ustawia nazwę modułu/klasy, której zmienne będą przetwarzane
+	 * @param string $class Nazwa modułu
+	 */
+	function setClass($class) {
+		$this->class = $class;
+	}
+	
+	/**
+	 * Pobiera zmienną modułu o podanej nazwie (getter).
+	 * @param string $name Nazwa zmiennej
+	 * @return mixed Wartość zmiennej lub NULL
+	 */
 	function __get($name) {
 		$this->init();
 		
@@ -128,6 +152,11 @@ class BotSession {
 		}
 	}
 	
+	/**
+	 * Ustawia zmienną o podanej nazwie
+	 * @param string $name Nazwa zmiennej
+	 * @param mixed $value Wartość zmiennej
+	 */
 	function __set($name, $value) {
 		$this->init();
 		
@@ -135,6 +164,11 @@ class BotSession {
 		$st->execute(array($this->class, $name, serialize($value)));
 	}
 	
+	/**
+	 * Sprawdza czy podana zmienna została ustawiona.
+	 * @param string $name Nazwa zmiennej
+	 * @return bool Czy zmienna istnieje?
+	 */
 	function __isset($name) {
 		$this->init();
 		
@@ -145,6 +179,10 @@ class BotSession {
 		return ($st[0]>0);
 	}
 	
+	/**
+	 * Usuwa zmienną o podanej nazwie
+	 * @param string $name Nazwa zmiennej
+	 */
 	function __unset($name) {
 		$this->init();
 		
@@ -152,6 +190,10 @@ class BotSession {
 		$st->execute(array($this->class, $name));
 	}
 	
+	/**
+	 * Zapamiętuje tablicę zmiennych danego modułu
+	 * @param array $array Tablica zmiennych
+	 */
 	function push($array) {
 		$this->PDO->beginTransaction();
 		foreach($array as $name => $value) {
@@ -160,6 +202,10 @@ class BotSession {
 		$this->PDO->commit();
 	}
 	
+	/**
+	 * Zwraca wszystkie ustawione zmienne danego modułu
+	 * @return array Lista wszystkich zmiennych
+	 */
 	function pull() {
 		$this->init();
 		
@@ -169,16 +215,15 @@ class BotSession {
 		
 		$return = array();
 		foreach($st as $row) {
-			$return[$row['name']] = $row['value'];
+			$return[$row['name']] = unserialize($row['value']);
 		}
 		
 		return $return;
 	}
 	
-	function setClass($class) {
-		$this->class = $class;
-	}
-	
+	/**
+	 * Usuwa wszystkie zmienne sesyjne danego modułu.
+	 */
 	function truncate() {
 		$this->init();
 		

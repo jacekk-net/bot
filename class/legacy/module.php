@@ -1,18 +1,19 @@
 <?php
 interface module {
 	static function register_cmd();
-	// Returns:
+	// Zwraca:
 	// array(
-	//   'CMD1_NAME' => 'FUNCTION_INSIDE_CLASS',
-	//   'CMD2_NAME' => 'FUNCTION_INSIDE_CLASS',
+	//   'KOMENDA1' => 'METODA_OBSLUGUJACA_KOMENDE1',
+	//   'KOMENDA2' => 'METODA_OBSLUGUJACA_KOMENDE2',
 	//   ...
 	// )
 	
 	static function help($cmd=NULL);
-	// Return help content about command $cmd to GGapi::put*() functions
-	//    if $cmd is NULL return help content for all commands
+	// Zwraca pomoc dotyczącą komendy z użyciem funkcji GGapi::put*()
+	// Jeśli $cmd === NULL, zwraca skróconą listę poleceń modułu
 	
-	// static function FUNCTION_INSIDE_CLASS(CMD_NAME, REST_OF_PLAINTEXT)
-	//    REST_OF_PLAINTEXT is raw (non trimmed etc.) part after command name, without leading space
+	// static function METODA_OBSLUGUJACA_KOMENDE(NAZWA_KOMENDY, ARGUMENTY)
+	//    ARGUMENTY to wszystko poza nazwą komendy, przekazane w taki sposób,
+	//    w jaki zostały otrzymane od użytkownika
 }
 ?>

@@ -1,11 +1,33 @@
 <?php
 class BotMsgException extends Exception {}
+
+/**
+ * Interfejs dla klas przetwarzających wiadomości wychodzące
+ * do formatu właściwego dla danej sieci.
+ */
 interface BotMsgInterface {
+	/**
+	 * Konstruktor
+	 * @param BotMsg $msg Wiadomość do przetworzenia
+	 */
 	function __construct(BotMsg $msg);
+	/**
+	 * Zwraca przetworzoną wiadomość
+	 * @return string Wiadomość po przetworzeniu
+	 */
 	function __toString();
+	
+	/**
+	 * Podaje na wyjście (np. za pomocą echo) wiadomość w formacie
+	 * odpowiednim dla danego API, uwzględniając nagłówki HTTP
+	 * i inne konieczne elementy.
+	 */
 	function sendPullResponse();
 }
 
+/**
+ * Klasa reprezentująca wiadomość wychodzącą.
+ */
 class BotMsg {
 	private $beautiful = TRUE;
 	private $parser = NULL;
@@ -14,14 +36,28 @@ class BotMsg {
 	private $raw = '';
 	
 	/**
-	 * Włącza lub wyłącza "upiększanie" konwertowanej do czystego tekstu wiadomości, np.:
-	 * <b>abc</b> zamieniane jest na *abc*
-	 * <h1>efg</h1> przechodzi w = efg =
+	 * Włącza lub wyłącza "upiększanie" konwertowanej
+	 * do czystego tekstu ({@link BotMsg::getText()}) wiadomości, np.:
+	 *
+	 * &lt;b&gt;abc&lt;/b&gt; zamieniane jest na \*abc\*
+	 *
+	 * &lt;h1&gt;efg&lt;h1&gt; przechodzi w = efg =
+	 *
 	 * Domyślnie włączone
 	 * @param bool $set Ustawienie "upiększania"
 	 */
+	function setBeautiful($set = FALSE) {
+		if($this->beautiful != $set) {
+			$this->text = $this->html = $this->parser = NULL;
+			$this->beautiful = (bool)$set;
+		}
+	}
+	
+	/**
+	 * @deprecated Zastąpiono funkcją {@link BotMsg::setBeautiful()}
+	 */
 	function beautifulText($set = FALSE) {
-		$this->beautiful = (bool)$set;
+		$this->setBeautiful($set);
 	}
 	
 	/**
@@ -204,7 +240,7 @@ class BotMsg {
 			}
 		}
 		
-		return $return;
+		return trim($return);
 	}
 	
 	private function parseHTMLDOM($dom) {

@@ -8,8 +8,6 @@
     http://dev.gg.pl/api/pages/botapi.html#rejestracja
 * ustaw serwer WWW tak, by plik BotGG.php był wykonywany po wejściu na
   ustalony przy rejestracji adres
-* ustaw serwer WWW tak, by plik BotIMI.php był wykonywany po wejściu na
-  ustalony w IMified.com adres
 * zmień /sciezka/do/bota w pliku data/update.sh na rzeczywistą, bezwzględną
   ścieżkę do katalogu skryptu
 * wykonuj za pomocą crona polecenie `/sciezka/do/bota/data/update.sh` ok.
@@ -34,12 +32,13 @@ class msapi_config {
 -------
 
 Jeśli dodajesz/usuwasz moduły lub komendy KONIECZNIE usuń wszystkie pliki
-z katalogu ./cache - w przeciwnym wypadku polecenia te mogą powodować błędy
-w działaniu bota!
+z katalogu ./cache - w przeciwnym wypadku może to powodować błędy
+w działaniu całego bota!
 
 ------------
  INFORMACJA
 ------------
+
 W razie problemów zacznij od zmiany
     error_reporting(E_COMPILE_ERROR|E_PARSE);
 na

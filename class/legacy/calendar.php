@@ -1,12 +1,14 @@
 <?php
 /**
+ * Klasa obsługująca polskie wyrażenia określające daty
  * @todo Potrzebna jest funkcja, które będzie wyciągać datę z początku lub końca danego ciągu. Patrz: {@link tv::parse_date()}
  */
 class calendar {
 	/**
+	 * Na podstawie podanej daty zwraca uniksowy znacznik czasu
 	 * @param string $date Data w formacie "naturalnym". Np. jutro, 1 stycznia, piątek
-	 * @return int Uniksowy znacznik czasu. Do użycia w funkcji date()
-	 * @uses funcs::utfToAscii()
+	 * @return int Uniksowy znacznik czasu - liczba sekund od północy 1 stycznia 1970
+	 * @see http://www.php.net/date
 	 */
 	static function parse_date($date) {
 		$date = funcs::utfToAscii($date);

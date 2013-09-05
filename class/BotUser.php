@@ -9,13 +9,13 @@ class BotUser {
 	 * - IMified
 	 * - HTTP
 	 * - Local
-	 * @var string
+	 * @var string $interface
 	 */
 	private $interface;
 	
 	/**
 	 * Numer lub identyfikator użytkownika
-	 * @var string
+	 * @var string $uid
 	 */
 	private $uid;
 	
@@ -29,22 +29,30 @@ class BotUser {
 	 * - yahoo.imified.com
 	 * - gtalk.imified.com
 	 * - localhost
-	 * @var string
+	 * @var string $network
 	 */
 	private $network;
 	
 	/**
 	 * Identyfikator/unikalna nazwa bota, do którego skierowano zapytanie.
 	 * Najczęściej numer Gadu-Gadu lub botkey w przypadku IMified.com
+	 * @var string $bot
 	 */
 	private $bot;
 	
 	/**
 	 * Parametry zapytania. Przy IMified równe zmiennej $_POST['channel']
-	 * @var string
+	 * @var string $params
 	 */
 	private $params;
 	
+	/**
+	 * Konstruktor. W argumencie otrzymuje pseudo-URL określający użytkownika i sieć.
+	 * Przykłady:
+	 * - Gadu-Gadu://123456\@gadu-gadu.pl
+	 * - IMified://user\\\@jabber\@jabber.imified.com/BOTKEY?private
+	 * @param string $user URL użytkownika
+	 */
 	function __construct($user) {
 		$data = parse_url($user);
 		
@@ -55,6 +63,11 @@ class BotUser {
 		$this->params = @$data['query'];
 	}
 	
+	/**
+	 * Umożliwia dostęp tylko do odczytu do prywanych zmiennych
+	 * @param string $name Nazwa zmiennej
+	 * @return mixed Wartość zmiennej prywatnej
+	 */
 	function __get($name) {
 		return $this->$name;
 	}
