@@ -18,7 +18,7 @@ function testdir($dir) {
 echo '<table>
 <tr> <th class="head" colspan="2">Interpreter PHP</th> </tr>
 ';
-test('Wersja PHP >= 5.2', version_compare(PHP_VERSION, '5.2.0', '>='));
+test('Wersja PHP >= 5.3', version_compare(PHP_VERSION, '5.3.0', '>='));
 test('magic_quotes_gpc = Off', (get_magic_quotes_gpc() == 0));
 test('allow_url_fopen = On', (ini_get('allow_url_fopen') == 1));
 test('setlocale(pl_PL.UTF8)', setlocale(LC_CTYPE, 'pl_PL.UTF8', 'pl_PL', 'polish', 'plk'));

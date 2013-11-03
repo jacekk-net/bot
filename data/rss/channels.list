@@ -5,7 +5,6 @@ http://kanaly.rss.interia.pl/fakty.xml		interia		i,interia.pl				Interia.pl
 http://rss.gazeta.pl/pub/rss/wiadomosci.xml	gazeta		g,gazeta.pl				Gazeta.pl
 http://feeds.feedburner.com/glowny-di		di		dziennik internautow			Dziennik Internautów
 http://hacking.pl/rss.xml			hacking		h,hacking.pl				Hacking.pl
-http://linuxnews.pl/feed/			linuxnews	l,linux,ln,linux news,linuxnews.pl	Linux News
 http://rss.bankier.pl/wiadomosci/wiadomosci.xml	bankier		bankier.pl				Bankier.pl
 http://bash.org.pl/rss/				bash		b,sh,bash.org,bash.org.pl		bash.org.pl
 

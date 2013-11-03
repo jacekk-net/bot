@@ -37,7 +37,7 @@ class xmltv_parse {
 			
 			$line = explode("\t", $line);
 			for($i=0; $i<count($line); $i++) {
-				if($tv!==NULL AND funcs::utfToAscii($line[$i])==$tv) {
+				if($tv !== NULL AND funcs::utfToAscii($line[$i]) == $tv) {
 					return $line[0];
 				}
 				else
@@ -47,7 +47,7 @@ class xmltv_parse {
 			}
 		}
 		
-		if($tv!==NULL) {
+		if($tv !== NULL) {
 			return FALSE;
 		}
 		else
