@@ -13,6 +13,9 @@
 * wykonuj za pomocą crona polecenie `/sciezka/do/bota/data/update.sh` ok.
   20 minut po każdej pełnej godzinie
 * uruchom /data/update_all.sh (będąc w katalogu ./data) od razu po instalacji
+* zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
+  aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
+  ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
 * pobierz Account Key ze strony https://datamarket.azure.com/
   (wymaga identyfikatora Windows Live ID), uzyskaj subskrybcję Microsoft Translator:
   https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb

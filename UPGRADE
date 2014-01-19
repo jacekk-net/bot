@@ -1,13 +1,26 @@
 Wersję można sprawdzić w pliku ./class/legacy/main.php
 
 ===========================
+ AKTUALIZACJA Z WERSJI 2.6
+===========================
+
+* zastąp plik ./modules/30_rss.php
+* zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
+  aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
+  ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
+
+===========================
  AKTUALIZACJA Z WERSJI 2.5
 ===========================
 
 * nadpisz wszystkie pliki w katalogu ./class (oraz podkatalogach),
   za wyjątkiem ./class/config.php
+* zastąp plik ./modules/30_rss.php
 * zastąp plik ./data/lotto/pobierz.php
 * zastąp plik ./data/tv/wp_parse.php
+* zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
+   aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
+   ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
 
 ===========================
  AKTUALIZACJA Z WERSJI 2.4
@@ -16,9 +29,13 @@ Wersję można sprawdzić w pliku ./class/legacy/main.php
 * nadpisz wszystkie pliki w katalogu ./class (oraz podkatalogach),
   za wyjątkiem ./class/config.php
 * zastąp plik ./data/lotto/pobierz.php
+* zastąp plik ./modules/30_rss.php
 * zastąp plik ./modules/70_kino/handler.php
 * zastąp plik ./test.php
 * usuń katalog ./data/kino
+* zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
+  aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
+  ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
 
 ===========================
  AKTUALIZACJA Z WERSJI 2.3
@@ -34,6 +51,9 @@ Wersję można sprawdzić w pliku ./class/legacy/main.php
 * usuń katalog ./data/kino
 * zastąp plik ./test.php
 * usuń wszystkie pliki z katalogu ./cache
+* zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
+  aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
+  ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
 
 ======================================
  AKTUALIZACJA Z WERSJI 2.2/2.1/2.0 RC
@@ -50,6 +70,9 @@ Wersję można sprawdzić w pliku ./class/legacy/main.php
 * wgraj nowe pliki do folderu ./data/pogoda
 * usuń wszystkie pliki z katalogów ./cache oraz ./data/tv/cache
 * dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
+* zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
+  aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
+  ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
 * pobierz Account Key ze strony https://datamarket.azure.com/
   (wymaga identyfikatora Windows Live ID) i uzyskaj subskrybcję Microsoft Translator:
   https://datamarket.azure.com/dataset/1899a118-d202-492c-aa16-ba21c33c06cb

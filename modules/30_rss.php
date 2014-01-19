@@ -170,17 +170,32 @@ class rss implements module {
 			return FALSE;
 		}
 		
-		GGapi::putRichText(self::p($rss->channel->title), TRUE);
-		if($rss->channel->copyright) {
-			GGapi::putRichText("\n".self::p($rss->channel->copyright));
+		if($rss->entry) {
+			GGapi::putRichText(self::p($rss->title), TRUE);
+			
+			foreach($rss->entry as $item) {
+				GGapi::putRichText("\n\n".self::p($item->title), TRUE);
+				GGapi::putRichText("\n".self::p($item->summary, ($arg=='bash'))."\n".self::p($item->link['href']));
+			
+				if(GGapi::getLength() > 1700) {
+					return;
+				}
+			}
 		}
-		
-		foreach($rss->channel->item as $item) {
-			GGapi::putRichText("\n\n".self::p($item->title), TRUE);
-			GGapi::putRichText("\n".self::p($item->description, ($arg=='bash'))."\n".self::p($item->link));
-		
-			if(GGapi::getLength() > 1700) {
-				return;
+		else
+		{
+			GGapi::putRichText(self::p($rss->channel->title), TRUE);
+			if($rss->channel->copyright) {
+				GGapi::putRichText("\n".self::p($rss->channel->copyright));
+			}
+			
+			foreach($rss->channel->item as $item) {
+				GGapi::putRichText("\n\n".self::p($item->title), TRUE);
+				GGapi::putRichText("\n".self::p($item->description, ($arg=='bash'))."\n".self::p($item->link));
+			
+				if(GGapi::getLength() > 1700) {
+					return;
+				}
 			}
 		}
 	}
