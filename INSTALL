@@ -4,10 +4,11 @@
 	- ./data
 	- ./database
 * sprawdź wymagania skryptu otwierając w przeglądarce test.php
-* zarejestruj się zgodnie z instrukcją:
-    http://dev.gg.pl/api/pages/botapi.html#rejestracja
+* zarejestruj numer, pod którym będzie działał bot, na stronie:
+    https://boty.gg.pl/rejestracja/
 * ustaw serwer WWW tak, by plik BotGG.php był wykonywany po wejściu na
-  ustalony przy rejestracji adres
+  ustalony w poniższym formularzu adres:
+    https://boty.gg.pl/narzedzia/url/
 * zmień /sciezka/do/bota w pliku data/update.sh na rzeczywistą, bezwzględną
   ścieżkę do katalogu skryptu
 * wykonuj za pomocą crona polecenie `/sciezka/do/bota/data/update.sh` ok.
