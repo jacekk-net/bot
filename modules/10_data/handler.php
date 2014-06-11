@@ -1,4 +1,6 @@
 <?php
+@date_default_timezone_set('Europe/Warsaw');
+
 class bot_data_module implements BotModule {
 	static $dni = array(
 		'niedziela',
@@ -29,9 +31,7 @@ class bot_data_module implements BotModule {
 		
 		if(empty($arg)) {
 			$data = time();
-		}
-		else
-		{
+		} else {
 			$data = calendar::parse_date($arg);
 			if(!$data) {
 				return new BotMsg('Podana data nie została rozpoznana<br />'."\n"
@@ -45,23 +45,21 @@ class bot_data_module implements BotModule {
 		
 		if(date('d.m.Y') == date('d.m.Y', $data)) {
 			$txt = 'Dziś jest ';
-		}
-		else
-		{
+		} else {
 			$txt = 'Wybrany dzień to ';
 		}
 		
 		include('./data/data/data.php');
 		
-		$txt .= self::$dni[date('w', $data)].', '.date('j', $data).' '.self::$miesiace[date('n', $data)].' '.date('Y').' r., '.(date('z', $data)+1).' dzień roku.<br />'."\n"
+		$txt .= self::$dni[date('w', $data)].', '.date('j', $data).' '
+			. self::$miesiace[date('n', $data)].' '.date('Y').' r., '
+			. (date('z', $data)+1).' dzień roku.<br />'."\n"
 			. '<br />'."\n";
 		
 		$msg->session->setClass('pogoda');
 		if(!isset($msg->session->geo)) {
 			$geo = array('lon' => '52.25', 'lat' => '21.0');
-		}
-		else
-		{
+		} else {
 			$geo = $msg->session->geo;
 		}
 		
@@ -92,6 +90,8 @@ class bot_data_module implements BotModule {
 				. 'imieniny Adama<br />'."\n"
 				. 'imieniny Ewy');
 		}
+		
+		$txt = array();
 		
 		foreach($imiona[$arg] as $dzien) {
 			$dzien = explode('.', $dzien);
