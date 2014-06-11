@@ -139,8 +139,10 @@ class bot_pogoda_module implements BotModule {
 			$arg = trim($msg->args);
 		}
 		
+		$out = new BotMsg();
+		
 		if(empty($arg)) {
-			if(isset($this->session->miasto)) {
+			if(isset($msg->session->miasto)) {
 				return new BotMsg('Aktualnie ustawione miejsce to: '.htmlspecialchars($this->session->miasto).', '.htmlspecialchars($this->session->countryName));
 			}
 			
@@ -161,7 +163,7 @@ class bot_pogoda_module implements BotModule {
 		}
 		else
 		{
-			$out = new BotMsg();
+			
 		}
 		
 		$api = new api_geonames();
