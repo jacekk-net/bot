@@ -3,7 +3,7 @@ class api_yrno_parse {
 	protected $xml;
 	protected $dane;
 	
-	static $symbols = array(
+	public static $symbols = array(
 		1 => 'Słonecznie',
 		2 => 'Lekkie zachmurzenie',
 		3 => 'Częściowe zachmurzenie',
@@ -29,7 +29,7 @@ class api_yrno_parse {
 		23 => 'Deszcz ze śniegiem, burze'
 	);
 	
-	static $wind = array(
+	public static $wind = array(
 		'N' => 'północny',
 		'NW' => 'północno-zachodni',
 		'W' => 'zachodni',
@@ -40,7 +40,7 @@ class api_yrno_parse {
 		'NE' => 'północno-wschodni',
 	);
 	
-	static function wind($dir) {
+	public static function wind($dir) {
 		if(isset(self::$wind[$dir])) {
 			return self::$wind[$dir];
 		}
@@ -50,7 +50,7 @@ class api_yrno_parse {
 		}
 	}
 	
-	function __construct($xml) {
+	public function __construct($xml) {
 		libxml_use_internal_errors();
 		$this->xml = simplexml_load_string($xml);
 		libxml_clear_errors();
@@ -60,11 +60,11 @@ class api_yrno_parse {
 		}
 	}
 	
-	function mktime($time) {
+	public function mktime($time) {
 		return strtotime(substr($time, 0, -1));
 	}
 	
-	function parseForecast() {
+	public function parseForecast() {
 		$this->dane = array(
 			'0h' => array(),
 			'3h' => array(),
@@ -109,7 +109,7 @@ class api_yrno_parse {
 		}
 	}
 	
-	function getCurrentIcon() {
+	public function getCurrentIcon() {
 		$now = time();
 		foreach($this->dane['3h'] as $value) {
 			if($value['from'] <= $now && $now < $value['to']) {
@@ -120,7 +120,7 @@ class api_yrno_parse {
 		return NULL;
 	}
 	
-	function getCurrentWeather() {
+	public function getCurrentWeather() {
 		$dist = PHP_INT_MAX;
 		$current = NULL;
 		foreach($this->dane['0h'] as $time => $value) {
@@ -137,7 +137,7 @@ class api_yrno_parse {
 		return $current;
 	}
 	
-	function getDaypartWeather($timestamp) {
+	public function getDaypartWeather($timestamp) {
 		$start = strtotime('6:00', $timestamp);
 		$dayend = strtotime('19:30', $timestamp);
 		$end = $start + 22*3600;
@@ -184,7 +184,7 @@ class api_yrno_parse {
 		return array('temp' => $temp, 'wind' => $wind);
 	}
 	
-	function getDaypartIcon($timestamp) {
+	public function getDaypartIcon($timestamp) {
 		$start = strtotime('6:00', $timestamp);
 		$end = strtotime('24:00', $timestamp);
 		
