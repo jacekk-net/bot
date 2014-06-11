@@ -130,7 +130,7 @@ class BotPull {
 			foreach($data as $func) {
 				if(!is_file(BOT_TOPDIR.$func['dir'].$func['file'])) {
 					$st = $this->PDO->prepare('DELETE FROM functions WHERE dir=? AND file=?');
-					$st->excecute(array($func['dir'], $func['file']));
+					$st->execute(array($func['dir'], $func['file']));
 					continue;
 				}
 				
