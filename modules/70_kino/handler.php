@@ -135,7 +135,6 @@ class bot_kino_module implements BotModule {
 			MIASTO
 		*/
 		$miasta = self::getMiasta();
-		$found = FALSE;
 		$miasto_num = $miasto_nazw = '';
 		
 		if(!$miasta) {
@@ -145,7 +144,6 @@ class bot_kino_module implements BotModule {
 		foreach($miasta as $miasto => $numer) {
 			$szukaj = funcs::utfToAscii($miasto);
 			if(($pos = strpos($arg, $szukaj)) !== FALSE) {
-				$found = TRUE;
 				$miasto_nazw = htmlspecialchars($miasto);
 				$miasto_num = $numer;
 				
@@ -154,11 +152,10 @@ class bot_kino_module implements BotModule {
 			}
 		}
 		
-		if($found===FALSE && !empty($arg2)) {
+		if($miasto_num === '' && !empty($arg2)) {
 			foreach($miasta as $miasto => $numer) {
 				$szukaj = funcs::utfToAscii($miasto);
 				if(($pos = strpos($arg2, $szukaj)) !== FALSE) {
-					$found = TRUE;
 					$miasto_nazw = htmlspecialchars($miasto);
 					$miasto_num = $numer;
 					
@@ -168,8 +165,9 @@ class bot_kino_module implements BotModule {
 			}
 		}
 		
-		if($found === FALSE) {
+		if($miasto_num === '') {
 			$txt = 'Wybrane miasto nie został odnalezione. Obsługiwane miejscowości:';
+			$miasto = 'Warszawa';
 			foreach($miasta as $miasto => $num) {
 				$txt .= '<br />'."\n".htmlspecialchars($miasto);
 			}
@@ -210,7 +208,6 @@ class bot_kino_module implements BotModule {
 			KINO
 		*/
 		$kina = self::getKina($miasto_num, $czas);
-		$found = FALSE;
 		$kino_num = $kino_nazw = '';
 		
 		if(!$kina) {
@@ -228,7 +225,6 @@ class bot_kino_module implements BotModule {
 		if(!empty($arg)) {
 			foreach($kina as $kino => $kino_id) {
 				if(levenshtein(funcs::utfToAscii($kino), $arg, 1, 1, 0) < 2) {
-					$found = TRUE;
 					$kino_num = $kino_id;
 					$kino_nazw = htmlspecialchars($kino);
 					break;
@@ -236,10 +232,9 @@ class bot_kino_module implements BotModule {
 			}
 		}
 		
-		if($found===FALSE && !empty($arg2)) {
+		if($kino_num === '' && !empty($arg2)) {
 			foreach($kina as $kino => $kino_id) {
 				if(levenshtein(funcs::utfToAscii($kino), $arg2, 1, 1, 0) < 2) {
-					$found = TRUE;
 					$kino_num = $kino_id;
 					$kino_nazw = htmlspecialchars($kino);
 					break;
@@ -247,8 +242,9 @@ class bot_kino_module implements BotModule {
 			}
 		}
 		
-		if($found === FALSE) {
+		if($kino_num === '') {
 			$txt = (!empty($arg) ? 'Podany obiekt nie został znaleziony. ' : '').'Dostępne kina w pasujących miastach:';
+			$kino = '';
 			foreach($kina as $kino => $num) {
 				$txt .= '<br />'."\n".$miasto_nazw.' '.htmlspecialchars($kino);
 			}
@@ -262,7 +258,7 @@ class bot_kino_module implements BotModule {
 		/*
 			REPERTUAR
 		*/
-		$filmy = self::getKino($miasto_num, $kino_id, $czas);
+		$filmy = self::getKino($miasto_num, $kino_num, $czas);
 		
 		if(!$filmy) {
 			return new BotMsg('Przepraszamy, wystąpił bład przy pobieraniu listy wyświelanych filmów.');
