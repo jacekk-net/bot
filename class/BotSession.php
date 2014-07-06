@@ -4,122 +4,99 @@
  * w szczególności jego ustawienia.
  */
 class BotSession {
-	private $PDO;
-	
 	/**
-	 * Nazwa modułu, którego zmienne klasa przetwarza
-	 * @var string $class max. 40 znaków
+	 * Instancja PDO tworzona w metodzie {@link BotSession::init()}.
+	 * @var PDO $PDO
+	 */
+	protected $PDO;
+
+	/**
+	 * Katalog, w którym trzymane są dane sesyjne użytkowników.
+	 * @var string $sessionDir
+	 */
+	protected $sessionDir;
+
+	/**
+	 * Katalog, w którym trzymane są dane sesyjne użytkowników
+	 * z poprzedniej wersji bota.
+	 * @var string $legacySessionDir
+	 */
+	protected $legacySessionDir;
+
+	/**
+	 * Nazwa modułu (max. 40 znaków), którego zmienne klasa aktualnie przetwarza,
+	 * ustawiana metodą {@link BotSession::setClass()}.
+	 * @var string $class
 	 */
 	protected $class = '';
-	protected $class_empty = TRUE;
 	
 	/**
 	 * Pseudo-URL użytkownika.
 	 * @see BotUser
-	 * @var string $user URL użytkownika
+	 * @var string $user
 	 */
-	private $user;
+	protected $user;
+
 	/**
-	 * Klasa z identyfikatorem użytkownika
-	 * @var BotUser $user_struct
+	 * Inicjuje klasę dla podanego użytkownika
+	 * @param string $user Pseudo-URL użytkownika
+	 * @param string $sessionDir Katalog z danymi, domyślnie BOT_TOPDIR/database
+	 * @param string $legacySessionDir Katalog z danymi ze starej wersji bota, domyślnie BOT_TOPDIR/db
 	 */
-	private $user_struct;
-	
-	/**
-	 * Inicjuje klasę w zależności od użytkownika
-	 */
-	function __construct($user) {
-		$this->user = sha1($user);
-		$this->user_struct = parse_url($user);
-		
-		$this->class_empty = FALSE;
+	public function __construct($user, $sessionDir = NULL, $legacySessionDir = NULL) {
+		if(empty($sessionDir)) {
+			$sessionDir = BOT_TOPDIR.'/database';
+		}
+		if(empty($legacySessionDir)) {
+			$legacySessionDir = BOT_TOPDIR.'/db';
+		}
+
+		$this->user = $user;
+		$this->sessionDir = $sessionDir;
+		$this->legacySessionDir = $legacySessionDir;
 	}
-	
-	private function init() {
-		if(strlen($this->class) == 0 && !$this->class_empty) {
-			throw new Exception('Przed użyciem $msg->session należy ustawić nazwę modułu za pomocą metody setClass - patrz "Poradnik tworzenia modułów", dział "Klasa BotMessage", rozdział "Pole $session".');
+
+	/**
+	 * Sprawdza ustawienie pola {@link BotSession::$class} oraz, jeśli nie została wykonana wcześniej,
+	 * dokonuje inicjalizacji klasy.
+	 * Metoda ta winna być wywoływana przez każdą publiczną funkcję operującą na danych.
+	 * @throws Exception Wyjątek rzucany, gdy przed użyciem metody, nazwa klasy
+	 *  nie została ustawiona metodą {@link BotSession::setClass()}
+	 */
+	protected function init() {
+		if(empty($this->class)) {
+			throw new Exception('Przed użyciem mechanizmu sesji należy ustawić nazwę modułu za pomocą metody setClass - patrz "Poradnik tworzenia modułów", dział "Klasa BotMessage", rozdział "Pole $session".');
 		}
 		
 		if($this->PDO) {
-			return NULL;
-		}
-		
-		if(is_file(BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite')) {
-			$this->PDO = new PDO('sqlite:'.BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite');
-			$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->PDO->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
-			
-			$st = $this->PDO->query('SELECT value FROM data WHERE class=\'\' AND name=\'_version\'');
-			$row = $st->fetch(PDO::FETCH_ASSOC);
-			if(is_array($row)) {
-				$version = (int)$row['value'];
-			}
-			else
-			{
-				$version = 0;
-			}
-			$st->closeCursor();
-			
-			if($version < 1) {
-				$this->PDO->query('UPDATE data SET class=\'kino\' WHERE class=\'\' AND name=\'kino\'');
-				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 1)');
-				$version = 1;
-			}
-			
-			if($version < 4) {
-				$this->PDO->query('DELETE FROM data WHERE class IS NULL AND name=\'user_struct\'');
-				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 4)');
-				$version = 4;
-			}
-			
+			// Inicjalizacja została już przeprowadzona - wyjdź.
 			return;
 		}
-		
-		try {
-			$this->PDO = new PDO('sqlite:'.BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite');
-			$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$this->PDO->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
-			
-			$this->PDO->query(
-				'CREATE TABLE data (
-					class VARCHAR(50) NOT NULL DEFAULT \'\',
-					name VARCHAR(40) NOT NULL,
-					value TEXT NOT NULL,
-					PRIMARY KEY (
-						class ASC,
-						name ASC
-					)
-				)'
-			);
-			
-			$this->PDO->query('INSERT INTO data (class, name, value) VALUES (\'\', \'_version\', 4)');
-			
-			$files = glob(BOT_TOPDIR.'/db/*/'.$this->user_struct['user'].'.ggdb');
-			if(!$files) {
-				return;
+
+		$dbFile = $this->sessionDir.'/'.sha1(sha1($this->user)).'.sqlite';
+
+		$this->PDO = new PDO('sqlite:'.$dbFile);
+		$this->PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$this->PDO->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
+
+		$st = $this->PDO->query('SELECT COUNT(name) FROM sqlite_master WHERE type=\'table\' AND name=\'data\'');
+		$num = $st->fetch(PDO::FETCH_NUM);
+		$schemaExists = $num[0] > 0;
+
+		if($schemaExists) {
+			$this->updateDatabase();
+		} else {
+			try {
+				$this->createSchema();
+				$this->importLegacyData();
 			}
-			
-			$this->PDO->beginTransaction();
-			$st = $this->PDO->prepare('INSERT OR REPLACE INTO data (class, name, value) VALUES (?, ?, ?)');
-			
-			foreach($files as $file) {
-				$data = unserialize(file_get_contents($file));
-				foreach($data as $name => $value) {
-					$st->execute(array($this->class, $name, serialize($value)));
+			catch(Exception $e) {
+				// Import danych nie udał się - usuń pozostałości.
+				if(file_exists($dbFile)) {
+					@unlink($dbFile);
 				}
+				throw $e;
 			}
-			
-			$this->PDO->commit();
-			
-			foreach($files as $file) {
-				unlink($file);
-			}
-		}
-		catch(Exception $e) {
-			if(file_exists(BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite')) {
-				@unlink(BOT_TOPDIR.'/database/'.sha1($this->user).'.sqlite');
-			}
-			throw $e;
 		}
 	}
 	
@@ -127,16 +104,16 @@ class BotSession {
 	 * Ustawia nazwę modułu/klasy, której zmienne będą przetwarzane
 	 * @param string $class Nazwa modułu
 	 */
-	function setClass($class) {
+	public function setClass($class) {
 		$this->class = $class;
 	}
 	
 	/**
-	 * Pobiera zmienną modułu o podanej nazwie (getter).
-	 * @param string $name Nazwa zmiennej
-	 * @return mixed Wartość zmiennej lub NULL
+	 * Pobiera zmienną o podanej nazwie (getter).
+	 * @param string $name Nazwa zmiennej.
+	 * @return mixed Wartość zmiennej lub NULL, jeśli zmienna nie istnieje.
 	 */
-	function __get($name) {
+	public function __get($name) {
 		$this->init();
 		
 		$st = $this->PDO->prepare('SELECT value FROM data WHERE class=? AND name=?');
@@ -146,18 +123,16 @@ class BotSession {
 		if(is_array($st)) {
 			return unserialize($st['value']);
 		}
-		else
-		{
-			return NULL;
-		}
+
+		return NULL;
 	}
 	
 	/**
-	 * Ustawia zmienną o podanej nazwie
-	 * @param string $name Nazwa zmiennej
-	 * @param mixed $value Wartość zmiennej
+	 * Ustawia zmienną o podanej nazwie.
+	 * @param string $name Nazwa zmiennej.
+	 * @param mixed $value Wartość do ustawienia.
 	 */
-	function __set($name, $value) {
+	public function __set($name, $value) {
 		$this->init();
 		
 		$st = $this->PDO->prepare('INSERT OR REPLACE INTO data (class, name, value) VALUES (?, ?, ?)');
@@ -166,24 +141,24 @@ class BotSession {
 	
 	/**
 	 * Sprawdza czy podana zmienna została ustawiona.
-	 * @param string $name Nazwa zmiennej
+	 * @param string $name Nazwa zmiennej do sprawdzenia.
 	 * @return bool Czy zmienna istnieje?
 	 */
-	function __isset($name) {
+	public function __isset($name) {
 		$this->init();
 		
 		$st = $this->PDO->prepare('SELECT COUNT(name) FROM data WHERE class=? AND name=?');
 		$st->execute(array($this->class, $name));
 		$st = $st->fetch(PDO::FETCH_NUM);
 		
-		return ($st[0]>0);
+		return ($st[0] > 0);
 	}
 	
 	/**
-	 * Usuwa zmienną o podanej nazwie
-	 * @param string $name Nazwa zmiennej
+	 * Usuwa zmienną o podanej nazwie.
+	 * @param string $name Nazwa zmiennej do usunięcia.
 	 */
-	function __unset($name) {
+	public function __unset($name) {
 		$this->init();
 		
 		$st = $this->PDO->prepare('DELETE FROM data WHERE class=? AND name=?');
@@ -191,10 +166,12 @@ class BotSession {
 	}
 	
 	/**
-	 * Zapamiętuje tablicę zmiennych danego modułu
-	 * @param array $array Tablica zmiennych
+	 * Dodaje tablicę zmiennych do danych użytkownika.
+	 * @param array $array Tablica zmiennych do dodania.
 	 */
-	function push($array) {
+	public function push($array) {
+		$this->init();
+
 		$this->PDO->beginTransaction();
 		foreach($array as $name => $value) {
 			$this->__set($name, $value);
@@ -203,18 +180,18 @@ class BotSession {
 	}
 	
 	/**
-	 * Zwraca wszystkie ustawione zmienne danego modułu
-	 * @return array Lista wszystkich zmiennych
+	 * Zwraca wszystkie ustawione zmienne dla modułu.
+	 * @return array Lista wszystkich zmiennych.
 	 */
-	function pull() {
+	public function pull() {
 		$this->init();
 		
 		$st = $this->PDO->prepare('SELECT name, value FROM data WHERE class=?');
 		$st->execute(array($this->class));
-		$st = $st->fetchAll(PDO::FETCH_ASSOC);
+		$rows = $st->fetchAll(PDO::FETCH_ASSOC);
 		
 		$return = array();
-		foreach($st as $row) {
+		foreach($rows as $row) {
 			$return[$row['name']] = unserialize($row['value']);
 		}
 		
@@ -224,11 +201,81 @@ class BotSession {
 	/**
 	 * Usuwa wszystkie zmienne sesyjne danego modułu.
 	 */
-	function truncate() {
+	public function truncate() {
 		$this->init();
 		
 		$st = $this->PDO->prepare('DELETE FROM data WHERE class=?');
 		$st->execute(array($this->class));
 	}
+
+	/**
+	 * Aktualizuje schemat bazy danych oraz dane, w szczególności poprawia błędy
+	 * wprowadzone we wcześniejszych wersjach (np. brak ustawionej nazwy klasy).
+	 */
+	private function updateDatabase() {
+		$st = $this->PDO->query('SELECT value FROM data WHERE class=\'\' AND name=\'_version\'');
+		$row = $st->fetch(PDO::FETCH_ASSOC);
+
+		$version = 0;
+		if (is_array($row)) {
+			$version = (int)$row['value'];
+		}
+
+		$st->closeCursor();
+
+		switch($version) {
+			case 1:
+				$this->PDO->query('UPDATE data SET class=\'kino\' WHERE class=\'\' AND name=\'kino\'');
+				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 1)');
+			case 2:
+			case 3:
+				$this->PDO->query('DELETE FROM data WHERE class IS NULL AND name=\'user_struct\'');
+				$this->PDO->query('INSERT OR REPLACE INTO data (class, name, value) VALUES (\'\', \'_version\', 4)');
+				break;
+		}
+	}
+
+	/**
+	 * Tworzy schemat bazy danych sesyjnych.
+	 */
+	private function createSchema() {
+		$this->PDO->query(
+			'CREATE TABLE data (
+				class VARCHAR(50) NOT NULL DEFAULT \'\',
+				name VARCHAR(40) NOT NULL,
+				value TEXT NOT NULL,
+				PRIMARY KEY (
+					class ASC,
+					name ASC
+				)
+			)'
+		);
+		$this->PDO->query('INSERT INTO data (class, name, value) VALUES (\'\', \'_version\', 4)');
+	}
+
+	/**
+	 * Importuje dane użytkowników z poprzedniej wersji bota.
+	 */
+	private function importLegacyData() {
+		$userData = parse_url($this->user);
+		$files = glob($this->legacySessionDir.'/*/'.$userData['user'].'.ggdb');
+		if(!$files) {
+			return;
+		}
+
+		$this->PDO->beginTransaction();
+		$st = $this->PDO->prepare('INSERT OR REPLACE INTO data (class, name, value) VALUES (?, ?, ?)');
+
+		foreach($files as $file) {
+			$data = unserialize(file_get_contents($file));
+			foreach($data as $name => $value) {
+				$st->execute(array($this->class, $name, serialize($value)));
+			}
+		}
+		$this->PDO->commit();
+
+		foreach($files as $file) {
+			unlink($file);
+		}
+	}
 }
-?>
