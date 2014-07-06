@@ -52,7 +52,7 @@ class bot_data_module implements BotModule {
 		include('./data/data/data.php');
 		
 		$txt .= self::$dni[date('w', $data)].', '.date('j', $data).' '
-			. self::$miesiace[date('n', $data)].' '.date('Y').' r., '
+			. self::$miesiace[date('n', $data)].' '.date('Y', $data).' r., '
 			. (date('z', $data)+1).' dzień roku.<br />'."\n"
 			. '<br />'."\n";
 		
