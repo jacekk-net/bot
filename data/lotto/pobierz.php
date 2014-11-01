@@ -3,16 +3,23 @@ echo STAR.'Pobieranie danych...';
 
 class lotto {
 	// Zawartość strony http://lotto.pl/wyniki-gier
+	// jako obiekt DOMDocument
 	protected $strona = NULL;
+	// Powiązany DOMXPath
+	protected $xpath = NULL;
+	
+	// Specjalne zachowania dla gier
+	const NONE = 0;
+	const PLUS = 1;
+	const LOTTOPLUS = 2;
+	const EKSTRA = 3;
 	
 	// Lista gier.
 	protected $gry = array(
-		// nazwa => array(ilość liczb, plus?, lottoplus?, skrót)
-		'lotto' => array(6, FALSE, 6, 'dl'),
-		'mini-lotto' => array(5, FALSE, 0, 'el'),
-		'kaskada' => array(12, FALSE, 0, 'ka'),
-		'multi-multi' => array(20, TRUE, 0, 'mm'),
-		'joker' => array(5, FALSE, 0, 'jk')
+		// nazwa
+		'lotto', 'mini-lotto',
+		'kaskada', 'multi-multi',
+		'joker', 'ekstra-pensja'
 	);
 	
 	// Spróbuj pobrać stronę http://lotto.pl/wyniki-gier
@@ -43,200 +50,178 @@ class lotto {
 			}
 		}
 		
-		// Dane są nieaktualne, więc pobieramy je ponownie
+		$strona = '';
+		$this->strona = new DOMDocument();
+		
 		if($cache == '' OR !$recent) {
-			$this->strona = @file_get_contents('http://lotto.pl/wyniki-gier');
-			if(!$this->strona) {
+			// Dane są nieaktualne, więc pobieramy je ponownie
+			$strona = @file_get_contents('http://lotto.pl/wyniki-gier');
+			if(!$strona) {
 				throw new Exception('Nie udało się pobrać wyników.');
 			}
 			
 			// Można zapisać do cache'a...
 			if($cache != '') {
 				// ...więc zapamiętujemy arkusz.
-				file_put_contents($cache, $this->strona);
+				file_put_contents($cache, $strona);
 			}
+			
+			@$this->strona->loadHtml($strona);
 		}
 		else
 		{
 			// Dane w cache są aktualne, więc załaduj je.
-			$this->strona = file_get_contents($cache);
+			@$this->strona->loadHtmlFile($cache);
 		}
+		
+		$this->xpath = new DOMXPath($this->strona);
 	}
 	
-	// Znajduje w $gdzie ciągi $od i $do, po czym zwraca
-	// treść znajdującą się pomiędzy tymi wartościami.
-	protected function wytnij(&$gdzie, $od, $do, $blad = NULL, &$pozycja = NULL) {
-		if($blad === NULL) {
-			$blad = 'Nie znaleziono wymaganego elementu';
-		}
-		
-		$start = strpos($gdzie, $od, $pozycja);
-		if($start === FALSE) {
+	// Znajduje odpowiedni element w pliku HTML lub zwraca błąd.
+	protected function wytnij($zapytanie, $gdzie = NULL, $blad = 'Brak danych') {
+		$rezultat = $this->xpath->query($zapytanie, $gdzie);
+		if(!$rezultat OR $rezultat->length <= 0) {
 			throw new Exception($blad);
 		}
-		$start += strlen($od);
-		
-		$stop = strpos($gdzie, $do, $start);
-		if($stop === FALSE) {
-			throw new Exception($blad);
-		}
-		
-		if($pozycja !== NULL) {
-			$pozycja = $stop + strlen($do);
-		}
-		
-		return trim(substr($gdzie, $start, $stop-$start));
+		return $rezultat;
 	}
 	
 	// Zwraca wynik gry (domyślnie lotto).
 	function wynik($gra = 'lotto') {
 		$wyniki = $this->wyniki($gra, 1);
+		if(!isset($wyniki[0])) {
+			throw new Exception('Brak wyników dla gry.');
+		}
 		return $wyniki[0];
 	}
 	
 	// Zwraca $liczba ostatnich wyników gry (domyślnie lotto),
 	// jednak nie więcej niż 5 (tyle jest na stronie Totalizatora).
-	function wyniki($gra = 'lotto', $liczba = 1000) {
-		if(!isset($this->gry[$gra])) {
+	function wyniki($gra = 'lotto', $zwroc = 1000) {
+		if(!in_array($gra, $this->gry)) {
 			throw new Exception('Podana gra liczbowa nie jest obsługiwana.');
 		}
 		
-		$wyniki = array();
-		$dane = $this->wytnij($this->strona, '<div class="start-wyniki_'.$gra,
-			'<div class="start-wyniki_', 'Nie znaleziono na stronie wyników dla gry '.$gra);
+		$rezultaty = array();
 		
-		$poz_dane = 0;
-		for($l = 1; $l <= $liczba; $l++) {
-			$data = $this->wytnij($dane, '<div class="wyniki_data', '</div>',
-				'Nie znaleziono '.$l.'-ej informacji o losowanu gry '.$gra, $poz_dane);
+		$dane = $this->wytnij('//div[@class="start-wyniki_'.$gra.'"]', NULL,
+			'Nie znaleziono na stronie wyników dla gry '.$gra);
+		$dane = $dane->item(0);
+		
+		
+		$daty = $this->wytnij('div[contains(concat(" ", @class, " "), " wyniki_data ")]', $dane,
+			'Nie znaleziono informacji o losowanu gry '.$gra);
+		$wyniki = $this->wytnij('div[contains(concat(" ", @class, " "), " glowna_wyniki_'.$gra.' ")]', $dane,
+			'Nie znaleziono wyników losowania gry '.$gra);
+		
+		$plusy = NULL;
+		try {
+			$plusy = $this->wytnij('div[@class="wynik_'.$gra.'_plus"]', $dane);
+		} catch(Exception $e) {}
+		
+		$lottoplusy = NULL;
+		try {
+			$lottoplusy = $this->wytnij('//div[@class="glowna_wyniki_'.$gra.'plus"]', $dane);
+		} catch(Exception $e) {}
+		
+		for($l = 0; $l < $daty->length && $l < $wyniki->length && $l < $zwroc; $l++) {
+			$rezultat = array();
 			
-			$pozycja = 0;
-			$wynik['data'] = $this->wytnij($data, '<strong>', '</strong>',
-				'Nie znaleziono '.$l.'-ej daty losowania gry '.$gra, $pozycja);
-			$wynik['godzina'] = $this->wytnij($data, '<strong>', '</strong>',
-				'Nie znaleziono '.$l.'-ej godziny losowania gry '.$gra, $pozycja);
+			// Znajdź $l-tą datę losowania i jego wynik
+			$data = $daty->item($l);
+			$wynik = $wyniki->item($l);
 			
 			try {
-				$liczby = $this->wytnij($dane, '<div class="glowna_wyniki_'.$gra, "\t".'</div>',
-					'Nie znaleziono na stronie '.$l.'-ch wyników dla gry '.$gra, $poz_dane);
-			}
-			catch(Exception $e) {
+				// Znajdź datę i godzinę
+				$data = $this->wytnij('strong', $data, 'Nie znaleziono '.$l.' daty losowania gry '.$gra);
+				$rezultat['data'] = trim($data->item(0)->textContent);
+				if($data->length > 1) {
+					$rezultat['godzina'] = trim($data->item(1)->textContent);
+				}
+				
+				// Znajdź poszczególne liczby w wyniku
+				$liczby = $this->wytnij('div[@class="wynik_'.$gra.'"]', $wynik,
+					'Nie znaleziono liczb w '.$l.' losowaniu gry '.$gra);
+				$rezultat['liczby'] = array();
+				foreach($liczby as $liczba) {
+					$rezultat['liczby'][] = trim($liczba->textContent);
+				}
+			} catch(Exception $e) {
 				break;
 			}
 			
-			// Pobierz kolejne liczy zawarte pomiędzy <div class="wynik_NAZWAGRY"> a </div>
-			$wynik['liczby'] = array();
-			$pozycja = 0;
-			for($i = 0; $i < $this->gry[$gra][0]; $i++) {
-				$wynik['liczby'][] = $this->wytnij($liczby, '<div class="wynik_'.$gra.'">',
-					'</div>', NULL, $pozycja);
-			}
-			
-			// Szukamy plusa
-			if($this->gry[$gra][1]) {
-				$wynik['plus'] = $this->wytnij($dane, '<div class="wynik_'.$gra.'_plus">',
-					'</div>', NULL, $poz_dane);
-			}
-			
-			// Szukamy lottoplusa
-			if($this->gry[$gra][2] > 0) {
-				try {
-					$liczby = $this->wytnij($dane, '<div class="glowna_wyniki_'.$gra.'plus">', "\t".'</div>',
-						'Nie znaleziono na stronie '.$l.'-ch wyników dla gry '.$gra.'plus', $poz_dane);
+			try {
+				// Szukamy plusa
+				if($plusy && $plusy->length > $l) {
+					$rezultat['plus'] = trim($plusy->item($l)->textContent);
 				}
-				catch(Exception $e) {
-					continue;
-				}
-				
-				$pozycja = 0;
-				$wynik['plus'] = array();
-				for($i = 0; $i < $this->gry[$gra][2]; $i++) {
-					$wynik['plus'][] = $this->wytnij($liczby, '<div class="wynik_'.$gra.'plus">',
-						'</div>', 'Nie znaleziono wyników losowania '.$gra.'plus', $pozycja);
-				}
-			}
+			} catch(Exception $e) {}
 			
-			$wyniki[] = $wynik;
+			try {
+				// Szukamy ekstra liczby
+				$ekstra = $this->wytnij('div[@class="wynik_'.strtr($gra, '-', '_').'"]', $wynik,
+					'Nie znaleziono ekstra w '.$l.' losowaniu gry '.$gra);
+				$rezultat['ekstra'] = trim($ekstra->item(0)->textContent);
+			} catch(Exception $e) {}
+			
+			try {
+				// Szukamy lottoplusa
+				if($lottoplusy && $lottoplusy->length > $l) {
+					$liczby = $this->wytnij('div[@class="wynik_'.$gra.'plus"]', $lottoplusy->item($l),
+						'Nie znaleziono liczb w '.$l.' losowaniu gry '.$gra.'plus');
+					$rezultat['plus'] = array();
+					foreach($liczby as $liczba) {
+						$rezultat['plus'][] = trim($liczba->textContent);
+					}
+				}
+			} catch(Exception $e) {}
+			
+			$rezultaty[] = $rezultat;
 		}
 		
-		return $wyniki;
+		return $rezultaty;
+	}
+	
+	protected $skroty = array(
+		'lotto' => 'dl', 'mini-lotto' => 'el',
+		'kaskada' => 'ka', 'multi-multi' => 'mm',
+		'joker' => 'jk', 'ekstra-pensja' => 'ep'
+	);
+	
+	function pobierz_jeden($skrot, $wynik) {
+		$last_data = @file_get_contents('./last_'.$skrot.'.txt');
+		if($last_data != $wynik['data']) {
+			foreach($wynik['liczby'] as $i => $liczba) {
+				$wynik[$i+1] = $liczba;
+			}
+			file_put_contents('./last_'.$skrot.'.txt', $wynik['data']);
+			file_put_contents('./'.$skrot.'.txt', serialize($wynik));
+			file_put_contents('./archiwum/'.$skrot.'_'.date('j.m.Y', strtotime($wynik['data'])).'.txt', serialize($wynik));
+			echo OK;
+		} else {
+			echo NOT;
+		}
 	}
 	
 	function pobierz() {
-		foreach($this->gry as $gra => $data) {
+		foreach($this->gry as $gra) {
 			echo STAR.'Wyniki gry '.$gra.'...';
 			if($gra == 'multi-multi') {
+				echo "\n";
 				$wyniki = $this->wyniki($gra, 2);
-				$wynik = $wyniki[0];
-				
-				$godzina = substr($wynik['godzina'], 0, 2);
-				if($godzina == '21') {
-					$godzina = '22';
-				}
-				$skrot = $data[3].$godzina;
-				
-				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
-				if($last_data != $wynik['data']) {
-					$output = array();
-					$output['data'] = $wynik['data'];
-					for($i = 0; $i < $data[0]; $i++) {
-						$output[$i+1] = $wynik['liczby'][$i];
+				foreach($wyniki as $wynik) {
+					$godzina = substr($wynik['godzina'], 0, 2);
+					echo '   '.STAR.'godzina '.$godzina.'...';
+					if($godzina == '21') {
+						$godzina = '22';
 					}
-					if($data[1]) {
-						$output['plus'] = $wynik['plus'];
-					}
-					file_put_contents('./last_'.$skrot.'.txt', $output['data']);
-					file_put_contents('./'.$skrot.'.txt', serialize($output));
-					file_put_contents('./archiwum/'.$skrot.'_'.date('j.m.Y', strtotime($output['data'])).'.txt', serialize($output));
+					$skrot = $this->skroty[$gra].$godzina;
+					
+					$this->pobierz_jeden($skrot, $wynik);
 				}
-				
-				$wynik = $wyniki[1];
-				
-				$godzina = substr($wynik['godzina'], 0, 2);
-				if($godzina == '21') {
-					$godzina = '22';
-				}
-				$skrot = $data[3].$godzina;
-				
-				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
-				if($last_data != $wynik['data']) {
-					$output = array();
-					$output['data'] = $wynik['data'];
-					for($i = 0; $i < $data[0]; $i++) {
-						$output[$i+1] = $wynik['liczby'][$i];
-					}
-					if($data[1]) {
-						$output['plus'] = $wynik['plus'];
-					}
-					file_put_contents('./last_'.$skrot.'.txt', $output['data']);
-					file_put_contents('./'.$skrot.'.txt', serialize($output));
-					file_put_contents('./archiwum/'.$skrot.'_'.date('j.m.Y', strtotime($output['data'])).'.txt', serialize($output));
-				}
+			} else {
+				$this->pobierz_jeden($this->skroty[$gra], $this->wynik($gra));
 			}
-			else
-			{
-				$wynik = $this->wynik($gra);
-				$skrot = $data[3];
-				
-				$last_data = @file_get_contents('./last_'.$skrot.'.txt');
-				if($last_data != $wynik['data']) {
-					$output = array();
-					$output['data'] = $wynik['data'];
-					for($i = 0; $i < $data[0]; $i++) {
-						$output[$i+1] = $wynik['liczby'][$i];
-					}
-					if($data[1]) {
-						$output['plus'] = $wynik['plus'];
-					}
-					if(($data[2] > 0) && isset($wynik['plus'])) {
-						$output['plus'] = $wynik['plus'];
-					}
-					file_put_contents('./last_'.$skrot.'.txt', $output['data']);
-					file_put_contents('./'.$skrot.'.txt', serialize($output));
-					file_put_contents('./archiwum/'.$skrot.'_'.date('j.m.Y', strtotime($output['data'])).'.txt', serialize($output));
-				}
-			}
-			echo OK;
 		}
 	}
 }
