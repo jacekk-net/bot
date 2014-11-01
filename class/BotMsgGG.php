@@ -338,7 +338,7 @@ class BotMsgGG implements BotMsgInterface {
 	}
 	
 	private function format(&$node) {
-		$node->setAttribute('beforeFormatType', ord($this->f_type));
+		$node->setAttribute('beforeFormatType', dechex($this->f_type));
 		$node->setAttribute('beforeFormatColor', base64_encode($this->f_color));
 		
 		if($node->hasAttribute('color')) {
@@ -379,7 +379,7 @@ class BotMsgGG implements BotMsgInterface {
 	}
 	
 	private function unformat($node) {
-		$this->f_type = chr($node->getAttribute('beforeFormatType'));
+		$this->f_type = hexdec($node->getAttribute('beforeFormatType'));
 		$node->removeAttribute('beforeFormatType');
 		
 		$this->f_color = base64_decode($node->getAttribute('beforeFormatColor'));
