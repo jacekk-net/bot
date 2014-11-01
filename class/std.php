@@ -37,5 +37,5 @@ if(!defined('PHPUNIT')) {
 setlocale(LC_CTYPE, 'pl_PL.utf8', 'pl_PL', 'polish', 'plk');
 mb_internal_encoding('UTF-8');
 libxml_use_internal_errors();
+libxml_disable_entity_loader(true);
 spl_autoload_register('botAutoload');
-?>
