@@ -164,7 +164,7 @@ class rss implements module {
 			}
 		}
 		
-		$rss = @simplexml_load_file('./data/rss/'.$arg.'.rss');
+		$rss = @simplexml_load_string(file_get_contents('./data/rss/'.$arg.'.rss'));
 		if(!$rss) {
 			GGapi::putText('Błąd przy przetwarzaniu kanału, przepraszamy.');
 			return FALSE;
