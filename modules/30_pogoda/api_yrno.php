@@ -203,7 +203,7 @@ class api_yrno_parse {
 }
 
 function yrno_weather($lat, $lon) {
-	$down = new DownloadHelper('http://api.yr.no/weatherapi/locationforecastlts/1.1/?lat='.urlencode($lat).';lon='.urlencode($lon));
+	$down = new DownloadHelper('http://api.yr.no/weatherapi/locationforecastlts/1.2/?lat='.urlencode($lat).';lon='.urlencode($lon));
 	$down->setopt(CURLOPT_USERAGENT, 'BotGG/'.main::VERSION_NUM.' WeatherModule/1.0 (http://bot.jacekk.net/weather.html)');
 	try {
 		$data = $down->exec();
