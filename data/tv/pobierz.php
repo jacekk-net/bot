@@ -52,7 +52,6 @@ $stations = array(
 	78 => 'Zone Romantica',
 	267 => 'Zone Europa',
 	84 => 'Zone Reality',
-	434 => 'Religia TV',
 	449 => 'BBC CBeebies',
 	74 => 'Jetix',
 	217 => 'ZigZap',
