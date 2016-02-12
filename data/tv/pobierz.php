@@ -95,8 +95,14 @@ foreach($stations as $num => $station) {
 	$doc = new DOMDocument('1.0', 'utf-8');
 	@$doc->loadHTMLFile('./cache/'.$num.'_'.$date);
 	
-	$wp = new wp_parse($doc);
-	$wp->xmltv($station, $out);
+	try {
+		$wp = new wp_parse($doc);
+		$wp->xmltv($station, $out);
+	} catch(Exception $e) {
+		echo "\n";
+		echo STAR.'Błąd przy pobieraniu danych dla kanału '.$station.FAIL."\n";
+		continue;
+	}
 	
 	$counter++;
 }
