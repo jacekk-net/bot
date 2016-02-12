@@ -6,7 +6,7 @@ class xmltv_parse {
 	static function schedule($id, $datetime=NULL) {
 		if($datetime === NULL) $datetime = time();
 		
-		$dane = simplexml_load_file(self::$file);
+		$dane = simplexml_load_string(file_get_contents(self::$file));
 		$abc = $dane->xpath('programme[@channel=\''.$id.'\' and number(substring(@stop, 1, 12))>\''.date('YmdHi', $datetime).'\' and number(substring(@start, 1, 12))<\''.date('YmdHi', $datetime+(3600*24)).'\']');
 		
 		$last = 0;
