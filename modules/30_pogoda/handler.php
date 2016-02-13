@@ -143,7 +143,7 @@ class bot_pogoda_module implements BotModule {
 		
 		if(empty($arg)) {
 			if(isset($msg->session->miasto)) {
-				return new BotMsg('Aktualnie ustawione miejsce to: '.htmlspecialchars($this->session->miasto).', '.htmlspecialchars($this->session->countryName));
+				return new BotMsg('Aktualnie ustawione miejsce to: '.htmlspecialchars($msg->session->miasto).', '.htmlspecialchars($msg->session->kraj));
 			}
 			
 			try {
@@ -181,9 +181,8 @@ class bot_pogoda_module implements BotModule {
 		$msg->session->cc = $dane['countryCode'];
 		$msg->session->geo = array('lat' => $dane['lat'], 'lon' => $dane['lng']);
 		
-		$out->a('<p>Ustawiono miejsce: '.htmlspecialchars($this->session->miasto).', '.htmlspecialchars($this->session->countryName).'</p>');
+		$out->a('<p>Ustawiono miejsce: '.htmlspecialchars($msg->session->miasto).', '.htmlspecialchars($msg->session->kraj).'</p>');
 		
 		return $out;
 	}
 }
-?>
