@@ -19,77 +19,70 @@ class bot_kino_module implements BotModule {
 	}
 	
 	function getMiasta() {
-		$xml = $this->cache('http://film.interia.pl/kino/repertuar');
+		$xml = $this->cache('http://film.interia.pl/repertuar-kin');
 		if(!$xml) return FALSE;
 		
 		$xpath = new DOMXPath($xml);
-		$dane = $xpath->query('//div[@id=\'cities\']//a');
+		$dane = $xpath->query('//a[contains(@class, "showtimes-city")]');
 		$return = array();
 		
 		foreach($dane as $miasto) {
 			$href = $miasto->getAttribute('href');
 			$data = trim($miasto->textContent);
-			$return[$data] = substr($href, strpos($href, ',')+1);
+			$return[$data] = substr($href, strrpos($href, ',')+1);
 		}
 		
 		return $return;
 	}
 	
 	function getKina($miasto, $kiedy='') {
-		$xml = $this->cache('http://film.interia.pl/kino/repertuar//kina,'.$miasto.($kiedy ? ','.$kiedy : ''));
+		$xml = $this->cache('http://film.interia.pl/repertuar-kin/miasto-a,cId,'.$miasto.($kiedy ? ',when,'.$kiedy : ''));
 		if(!$xml) return FALSE;
 		
 		$xpath = new DOMXPath($xml);
-		$dane = $xpath->query('//div[@id=\'mainContent\']/table//th[@class=\'theatre\']/a[1]');
+		$dane = $xpath->query('//div[@id="content"]//div[@class="showtimes-accordion-heading"]//p[@class="showtimes-cinema-name"]');
 		$return = array();
 		
-		foreach($dane as $kino) {
+		foreach($dane as $id => $kino) {
 			$name = trim($kino->textContent);
-			$return[$name] = $kino->getAttribute('href');
+			$return[$name] = $id;
 		}
 		
 		return $return;
 	}
 	
 	function getKino($miasto, $kino, $kiedy='') {
-		$xml = $this->cache('http://film.interia.pl/kino/repertuar//kina,'.$miasto.($kiedy ? ','.$kiedy : ''));
+		$xml = $this->cache('http://film.interia.pl/repertuar-kin/miasto-a,cId,'.$miasto.($kiedy ? ',when,'.$kiedy : ''));
 		if(!$xml) return FALSE;
 		
 		$xpath = new DOMXPath($xml);
-		$dane = $xpath->query('//div[@id=\'mainContent\']/table//a[@href=\''.$kino.'\']/../../following-sibling::tr');
+		$dane = $xpath->query('//div[@id=\'content\']//div[@class=\'showtimes-accordion-body\']');
 		$return = array();
 		
+		$dane = $xpath->query('.//div[@class=\'showtimes-cinema-movie\']', $dane[$kino]);
+		
 		foreach($dane as $film) {
-			if(!$film->firstChild) {
-				break;
-			}
-			if($film->firstChild->nodeName == 'th') {
-				break;
-			}
-			if($film->firstChild->nodeName != 'td') {
-				break;
-			}
+			$title = $xpath->query('.//span[@class=\'showtimes-cinema-movie-title\']', $film);
+			$hours = $xpath->query('.//span[@data-time]', $film);
 			
-			$tds = $xpath->query('td', $film);
-			$name = $xpath->query('a[1]', $tds->item(0));
-			
-			$more = array();
-			$more_desc = array(
-				's3d-movie' => '3D',
-				'dubbing-movie' => 'dubbing',
-			);
-			$more_xml = $xpath->query('span[@class=\'reper\']/div', $tds->item(0));
-			foreach($more_xml as $more_x) {
-				$more_x = $more_x->getAttribute('class');
-				if(isset($more_desc[$more_x])) {
-					$more[] = $more_desc[$more_x];
+			$hours_ret = array();
+			foreach($hours as $hour) {
+				$sub = array();
+				if($xpath->query('.//span[@showtimes-cinema-movie-dubbing]', $hour)) {
+					$sub[] = 'DUB';
 				}
+				if($xpath->query('.//span[@showtimes-cinema-movie-3d]', $hour)) {
+					$sub[] = '3D';
+				}
+				
+				$hour = $hour->getAttribute('data-time');
+				
+				$hours_ret[] = array(substr($hour, 0, -2).':'.substr($hour, -2), $sub);
 			}
 			
 			$return[] = array(
-				trim($tds->item(1)->textContent),
-				trim($name->item(0)->textContent),
-				implode(', ', $more),
+				trim($title->item(0)->textContent),
+				$hours_ret
 			);
 		}
 		
@@ -186,14 +179,19 @@ class bot_kino_module implements BotModule {
 		$data = array(
 			'dzis' => '',
 			'teraz' => '',
-			'jutro' => '1',
-			'pojutrze' => '2',
-			'po jutrze' => '2',
+			'jutro' => 'jutro',
+			'pojutrze' => 'pojutrze',
+			'po jutrze' => 'pojutrze',
 		);
-		for($i=0; $i<3; $i++) {
-			$data[date('d.m', strtotime('+'.$i.' day'))] = ($i ? $i : '');
-			$data[date('j.m', strtotime('+'.$i.' day'))] = ($i ? $i : '');
-		}
+		$data[date('d.m')] = '';
+		$data[date('j.m')] = '';
+		$data[$tydzien[date('w')]] = '';
+		$data[date('d.m', strtotime('+1 day'))] = 'jutro';
+		$data[date('j.m', strtotime('+1 day'))] = 'jutro';
+		$data[$tydzien[date('w', strtotime('+1 day'))]] = 'jutro';
+		$data[date('d.m', strtotime('+2 day'))] = 'pojutrze';
+		$data[date('j.m', strtotime('+2 day'))] = 'pojutrze';
+		$data[$tydzien[date('w', strtotime('+2 day'))]] = 'pojutrze';
 		
 		$czas = '';
 		foreach($data as $known => $d) {
@@ -211,14 +209,20 @@ class bot_kino_module implements BotModule {
 		$kino_num = $kino_nazw = '';
 		
 		if(!$kina) {
-			return new BotMsg('Przepraszamy, wystąpił bład przy pobieraniu listy kin.');
+			$txt = 'Brak seansów w tym mieście w wybranym dniu.';
+			$txt .= '<br />'."\n"
+				. '<br />'."\n"
+				. '<u>Spróbuj też:</u><br />'."\n"
+				. 'kino '.$miasto_nazw.' '.htmlspecialchars($arg).' '.($czas != 'dzis' ? 'jutro' : ($czas != '2' ? 'pojutrze' : 'dziś')).'<br />'."\n"
+				. 'kino '.$miasto_nazw.' '.htmlspecialchars($arg).' '.($czas != '' ? 'dziś' : ($czas != '2' ? 'pojutrze' : 'dziś'));
+			return new BotMsg($txt);
 		}
 		
 		if(empty($kina)) {
-			return new BotMsg(($czas == '1' ? 'Jutro' : ($czas == '2' ? 'Pojutrze' : 'Dziś')).' żadne filmy nie są wyświetlane w podanym mieście.<br />'."\n"
+			return new BotMsg(($czas == '' ? 'Dziś' : ucfirst($czas)).' żadne filmy nie są wyświetlane w podanym mieście.<br />'."\n"
 				. '<br />'."\n"
 				. '<u>Spróbuj też:</u><br />'."\n"
-				. 'kino '.$miasto_nazw.' '.htmlspecialchars($arg).' '.($czas != '1' ? 'jutro' : ($czas != '2' ? 'pojutrze' : 'dziś')).'<br />'."\n"
+				. 'kino '.$miasto_nazw.' '.htmlspecialchars($arg).' '.($czas != 'dzis' ? 'jutro' : ($czas != '2' ? 'pojutrze' : 'dziś')).'<br />'."\n"
 				. 'kino '.$miasto_nazw.' '.htmlspecialchars($arg).' '.($czas != '' ? 'dziś' : ($czas != '2' ? 'pojutrze' : 'dziś')));
 		}
 		
@@ -252,7 +256,7 @@ class bot_kino_module implements BotModule {
 			return new BotMsg($txt.'<br />'."\n"
 				. '<br />'."\n"
 				. '<u>Przykład:</u><br />'."\n"
-				. 'kino '.$miasto_nazw.' '.htmlspecialchars($kino).' '.($czas == '1' ? 'jutro' : ($czas == '2' ? 'pojutrze' : 'dziś')));
+				. 'kino '.$miasto_nazw.' '.htmlspecialchars($kino).' '.($czas == '' ? 'dziś' : $czas));
 		}
 		
 		/*
@@ -264,14 +268,19 @@ class bot_kino_module implements BotModule {
 			return new BotMsg('Przepraszamy, wystąpił bład przy pobieraniu listy wyświelanych filmów.');
 		}
 		
-		$txt = '<b>Repertuar dla kina '.$kino_nazw.' ('.$miasto_nazw.') na '.($czas == '1' ? 'jutro' : ($czas == '2' ? 'pojutrze' : 'dziś')).':</b>';
+		$txt = '<b>Repertuar dla kina '.$kino_nazw.' ('.$miasto_nazw.') na '.($czas == '' ? 'dziś' : $czas).':</b><br />'."\n";
 		if(empty($filmy)) {
 			$txt .= '<br />'."\n".'Brak projekcji.';
 		}
 		else
 		{
 			foreach($filmy as $film) {
-				$txt .= '<br />'."\n".htmlspecialchars($film[0]).' '.htmlspecialchars($film[1]).($film[2]!='' ? ' ('.htmlspecialchars($film[2]).')' : '');
+				$txt .= '<br />'."\n".htmlspecialchars($film[0]).'<br />'."\n";
+				$info = array();
+				foreach($film[1] as $dane) {
+					$info[] = '<b>'.$dane[0].'</b>'.($dane[1] ? ' ('.implode(', ', $dane[1]).')' : '');
+				}
+				$txt .= implode(', ', $info)."\n".'<br />';
 			}
 		}
 		
