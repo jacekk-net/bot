@@ -1,10 +1,42 @@
-Wersję można sprawdzić w pliku ./class/legacy/main.php
+Aktualną wersję można sprawdzić w pliku ./class/legacy/main.php
+
+=============================
+ AKTUALIZACJA Z WERSJI 2.6.1
+=============================
+
+* zastąp wszystkie pliki w katalogu ./class za wyjątkiem ./class/config.php
+* zastąp pliki:
+    ./data/lotto/pobierz.php
+    ./data/tv/aliases
+    ./data/tv/pobierz.php
+    ./data/tv/xmltv_parse.php
+    ./modules/10_data/handler.php
+    ./modules/30_pogoda/api_yrno.php
+    ./modules/30_pogoda/handler.php
+    ./modules/30_rss.php
+    ./modules/50_lotto.php
+    ./modules/70_kino/handler.php
+* usuń wszystkie pliki i foldery z katalogu ./cache
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 
 ===========================
  AKTUALIZACJA Z WERSJI 2.6
 ===========================
 
-* zastąp plik ./modules/30_rss.php
+* zastąp wszystkie pliki w katalogu ./class za wyjątkiem ./class/config.php
+* zastąp pliki:
+    ./data/lotto/pobierz.php
+    ./data/tv/aliases
+    ./data/tv/pobierz.php
+    ./data/tv/xmltv_parse.php
+    ./modules/10_data/handler.php
+    ./modules/30_pogoda/api_yrno.php
+    ./modules/30_pogoda/handler.php
+    ./modules/30_rss.php
+    ./modules/50_lotto.php
+    ./modules/70_kino/handler.php
+* usuń wszystkie pliki i foldery z katalogu ./cache
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 * zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
   aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
   ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
@@ -15,9 +47,20 @@ Wersję można sprawdzić w pliku ./class/legacy/main.php
 
 * nadpisz wszystkie pliki w katalogu ./class (oraz podkatalogach),
   za wyjątkiem ./class/config.php
-* zastąp plik ./modules/30_rss.php
-* zastąp plik ./data/lotto/pobierz.php
-* zastąp plik ./data/tv/wp_parse.php
+* zastąp pliki:
+    ./data/lotto/pobierz.php
+    ./data/tv/aliases
+    ./data/tv/pobierz.php
+    ./data/tv/wp_parse.php
+    ./data/tv/xmltv_parse.php
+    ./modules/10_data/handler.php
+    ./modules/30_pogoda/api_yrno.php
+    ./modules/30_pogoda/handler.php
+    ./modules/30_rss.php
+    ./modules/50_lotto.php
+    ./modules/70_kino/handler.php
+* usuń wszystkie pliki i foldery z katalogu ./cache
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 * zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
    aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
    ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
@@ -28,11 +71,22 @@ Wersję można sprawdzić w pliku ./class/legacy/main.php
 
 * nadpisz wszystkie pliki w katalogu ./class (oraz podkatalogach),
   za wyjątkiem ./class/config.php
-* zastąp plik ./data/lotto/pobierz.php
-* zastąp plik ./modules/30_rss.php
-* zastąp plik ./modules/70_kino/handler.php
-* zastąp plik ./test.php
+* zastąp pliki:
+    ./data/lotto/pobierz.php
+    ./data/tv/aliases
+    ./data/tv/pobierz.php
+    ./data/tv/wp_parse.php
+    ./data/tv/xmltv_parse.php
+    ./modules/10_data/handler.php
+    ./modules/30_pogoda/api_yrno.php
+    ./modules/30_pogoda/handler.php
+    ./modules/30_rss.php
+    ./modules/50_lotto.php
+    ./modules/70_kino/handler.php
+    ./test.php
+* usuń wszystkie pliki i foldery z katalogu ./cache
 * usuń katalog ./data/kino
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 * zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
   aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
   ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
@@ -47,10 +101,16 @@ Wersję można sprawdzić w pliku ./class/legacy/main.php
   za wyjątkiem ./class/config.php
 * usuń wszystkie pliki z katalogu ./data/pogoda
 * wgraj nowe pliki do folderu ./data/pogoda
-* zastąp plik ./data/lotto/pobierz.php
+* zastąp pliki:
+    ./data/lotto/pobierz.php
+    ./data/tv/aliases
+    ./data/tv/pobierz.php
+    ./data/tv/wp_parse.php
+    ./data/tv/xmltv_parse.php
+    ./test.php
+* usuń wszystkie pliki i foldery z katalogu ./cache
 * usuń katalog ./data/kino
-* zastąp plik ./test.php
-* usuń wszystkie pliki z katalogu ./cache
+* dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 * zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
   aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
   ustaw login w pliku ./modules/30_pogoda/api_geonames_config.php
@@ -63,12 +123,16 @@ Wersję można sprawdzić w pliku ./class/legacy/main.php
   z katalogu ./modules
 * nadpisz wszystkie pliki w katalogach ./class i ./modules,
   za wyjątkiem ./class/config.php
-* zastąp plik ./data/lotto/pobierz.php
-* zastąp plik ./data/tv/pobierz.php
-* zastąp plik ./test.php
+* zastąp pliki:
+    ./data/lotto/pobierz.php
+    ./data/tv/aliases
+    ./data/tv/pobierz.php
+    ./data/tv/wp_parse.php
+    ./data/tv/xmltv_parse.php
+    ./test.php
 * usuń wszystkie pliki z katalogu ./data/pogoda
 * wgraj nowe pliki do folderu ./data/pogoda
-* usuń wszystkie pliki z katalogów ./cache oraz ./data/tv/cache
+* usuń wszystkie pliki i foldery z katalogów ./cache oraz ./data/tv/cache
 * dokonaj aktualizacji danych (cd ./data ; ./update_all.sh)
 * zarejestruj się w serwisie GeoNames (http://www.geonames.org/login),
   aktywuj WebService (http://www.geonames.org/manageaccount - na dole),
@@ -92,7 +156,6 @@ class msapi_config {
 
 * zastąp wszystkie pliki (bez podfolderów!) w ./data,
   a następnie popraw ścieżkę do bota w ./data/update.sh
-* zastąp plik aliases w ./data/tv
 * wykonaj polecenia z działu "AKTUALIZACJA Z WERSJI 2.2/2.1/2.0 RC"
 
 -------
