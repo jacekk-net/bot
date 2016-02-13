@@ -1,0 +1,8 @@
+cache/*
+data/*/archiwum
+data/*/cache
+data/kurs/*.txt
+data/lotto/*.txt
+data/rss/*.rss
+data/tv/*.xml
+database/*
