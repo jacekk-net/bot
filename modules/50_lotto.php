@@ -15,9 +15,14 @@ class lotto implements module {
 			'ekspress' => 'cmd_lotto',
 			'ekspress' => 'cmd_lotto',
 			'exp' => 'cmd_lotto',
-			'ex' => 'cmd_lotto',
 			'el' => 'cmd_lotto',
 			'mini' => 'cmd_lotto',
+			
+			'ekstra' => 'cmd_lotto',
+			'extra' => 'cmd_lotto',
+			'pensja' => 'cmd_lotto',
+			'ep' => 'cmd_lotto',
+			'ex' => 'cmd_lotto',
 			
 			'multi' => 'cmd_lotto',
 			'multimulti' => 'cmd_lotto',
@@ -26,11 +31,6 @@ class lotto implements module {
 			
 			'ka' => 'cmd_lotto',
 			'kaskada' => 'cmd_lotto',
-			
-			'twoj' => 'cmd_lotto',
-			'tsn' => 'cmd_lotto',
-			'jk' => 'cmd_lotto',
-			'joker' => 'cmd_lotto',
 		);
 	}
 	
@@ -48,7 +48,7 @@ class lotto implements module {
 			GGapi::putRichText('lotek, wyniki, l', TRUE);
 			GGapi::putRichText(')'."\n".'   Podaje wyniki ostatniego losowania gry Totalizatora Sportowego ');
 			GGapi::putRichText('[gra]', FALSE, TRUE);
-			GGapi::putRichText(', gdzie gra to: lotto, mini (Mini Lotto), mm (Multi Multi), kaskada lub joker.');
+			GGapi::putRichText(', gdzie gra to: lotto, mini (Mini Lotto), mm (Multi Multi), kaskada lub pensja (Ekstra Pensja).');
 		}
 	}
 	
@@ -58,22 +58,22 @@ class lotto implements module {
 			'dl2' => 'Lotto',
 			'el' => 'Mini Lotto',
 			'el2' => 'Mini Lotto',
+			'ep' => 'Ekstra Pensja',
+			'ep2' => 'Ekstra Pensji',
 			'mm' => 'Multi Multi',
 			'mm2' => 'Multi Multi',
 			'mm14' => 'Multi Multi (14:00)',
 			'mm142' => 'Multi Multi (14:00)',
 			'mm22' => 'Multi Multi (22:00)',
 			'mm222' => 'Multi Multi (22:00)',
-			'jk' => 'Joker',
-			'jk2' => 'Jokera',
 			'ka' => 'Kaskada',
 			'ka2' => 'Kaskady',
 		);
 		$arg_start = array(
 			'dl' => 'dl', 'duzego' => 'dl', 'duzy' => 'dl', 'duzylotek' => 'dl',
-			'el' => 'el', 'express' => 'el', 'ekspress' => 'el', 'expres' => 'el', 'ekspres' => 'el', 'ex' => 'el', 'minilotto' => 'el', 'm' => 'el', 'ml' => 'el', 'mlotto' => 'el', 'mini' => 'el',
+			'el' => 'el', 'express' => 'el', 'ekspress' => 'el', 'expres' => 'el', 'ekspres' => 'el', 'minilotto' => 'el', 'm' => 'el', 'ml' => 'el', 'mlotto' => 'el', 'mini' => 'el',
+			'ep' => 'ep', 'ekstra' => 'ep', 'pensja' => 'ep', 'extra' => 'ep', 'ekstrapensja' => 'ep', 'extrapensja' => 'ep', 'ex' => 'ep',
 			'mm' => 'mm', 'multilotka' => 'mm', 'multi' => 'mm', 'multimulti' => 'mm',
-			'jk' => 'jk', 'joker' => 'jk', 'jokera' => 'jk', 'tsn' => 'jk', 'numerek' => 'jk', 'numerka' => 'jk', 'twojego' => 'jk', 'twoj' => 'jk', 'szczesliwego' => 'jk', 'szczesliwy' => 'jk',
 			'ka' => 'ka', 'kaskada' => 'ka', 'k' => 'ka',
 		);
 		$arg = explode(' ', funcs::utfToAscii($arg));

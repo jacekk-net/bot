@@ -19,7 +19,7 @@ class lotto {
 		// nazwa
 		'lotto', 'mini-lotto',
 		'kaskada', 'multi-multi',
-		'joker', 'ekstra-pensja'
+		'ekstra-pensja'
 	);
 	
 	// Spróbuj pobrać stronę http://lotto.pl/wyniki-gier
@@ -185,7 +185,7 @@ class lotto {
 	protected $skroty = array(
 		'lotto' => 'dl', 'mini-lotto' => 'el',
 		'kaskada' => 'ka', 'multi-multi' => 'mm',
-		'joker' => 'jk', 'ekstra-pensja' => 'ep'
+		'ekstra-pensja' => 'ep'
 	);
 	
 	function pobierz_jeden($skrot, $wynik) {
