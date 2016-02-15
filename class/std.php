@@ -39,3 +39,4 @@ mb_internal_encoding('UTF-8');
 libxml_use_internal_errors();
 libxml_disable_entity_loader(true);
 spl_autoload_register('botAutoload');
+ini_set('default_charset', 'utf-8');

@@ -7,7 +7,7 @@ class bot_kino_module implements BotModule {
 		libxml_use_internal_errors(TRUE);
 		
 		$dom = new DOMDocument();
-		if(!$dom->loadHTML($dane)) {
+		if(!$dom->loadHTML('<?xml encoding="utf-8" ?>' . $dane)) {
 			libxml_use_internal_errors(FALSE);
 			$down->cacheFor(1800);
 			return FALSE;
@@ -287,4 +287,3 @@ class bot_kino_module implements BotModule {
 		return new BotMsg($txt);
 	}
 }
-?>
